@@ -64,6 +64,8 @@ npm test
 
 `npm test` also runs `npm run check`: it simulates the Firefox concatenated `content.js` (classic script, no `import`) and fails on duplicate top-level names or syntax errors — the same class of issues AMO reports. `npm run build` runs the same check before writing `dist/`.
 
+Before you push (or automatically via `git push` after `npm ci`), run **`npm run validate`**: `npm ci` deps present, fixture tests, Firefox bundle check, and release build — same as GitHub Actions. Full HTML regression tests need a local gitignored `data/` folder; CI skips them when `data/` is absent.
+
 ## GitHub releases
 
 Tag `v0.1.4` (must match `package.json` version) and push. CI builds the packages and attaches them to the GitHub Release under the stable names above.

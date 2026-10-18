@@ -12,6 +12,7 @@ Version numbers match `package.json`, extension manifests, and Git tags (`v*`). 
 - Stop resolve/fetch loops that could freeze or crash the tab after pagination (ignore stale InitialState once shard data is applied; skip observer feedback from our own badges).
 - Firefox build: duplicate top-level names in the bundled `content.js` (`listenerRegistered`, `MOUNT_RETRY_MS`, `STATE_ID`) — AMO validation errors.
 - `npm run check`: parse the Firefox bundle with Acorn and detect duplicate top-level bindings across concatenated sources (CI on `main` / PRs).
+- `npm run validate` + optional `pre-push` hook; release workflow runs `npm ci` before build; CI skips gitignored `data/` integration tests.
 
 ## [0.1.3] - 2026-10-18
 

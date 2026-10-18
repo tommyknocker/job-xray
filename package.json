@@ -7,7 +7,9 @@
   "scripts": {
     "check": "node scripts/check-firefox-bundle.mjs",
     "test": "node tests/run.mjs && npm run check",
-    "build": "node scripts/build.mjs"
+    "validate": "node scripts/validate.mjs",
+    "build": "node scripts/build.mjs",
+    "prepare": "node scripts/install-git-hooks.mjs"
   },
   "devDependencies": {
     "acorn": "^8.15.0"
