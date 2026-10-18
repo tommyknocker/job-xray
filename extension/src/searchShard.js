@@ -7,13 +7,13 @@ import { computeSignals } from './metrics.js';
 import { vacancyIdFromCard } from './ui.js';
 
 const shardById = new Map();
-let listenerRegistered = false;
+let searchShardListenerRegistered = false;
 let resolveTimer = 0;
 let resolveInFlight = false;
 let lastResolvedKey = '';
 const failedResolveKeys = new Set();
 
-const MOUNT_RETRY_MS = [0, 200];
+const SEARCH_MOUNT_RETRY_MS = [0, 200];
 
 function debug(...args) {
     try {
@@ -152,7 +152,7 @@ async function fetchSearchVacancyHtml(pageIndex, sessionId) {
 }
 
 function scheduleMount(callback) {
-    for (const delay of MOUNT_RETRY_MS) {
+    for (const delay of SEARCH_MOUNT_RETRY_MS) {
         window.setTimeout(callback, delay);
     }
 }
@@ -205,10 +205,10 @@ export function maybeResolveSearchPageData(state, onResolved) {
 }
 
 export function registerSearchShardListener(onPayload) {
-    if (listenerRegistered) {
+    if (searchShardListenerRegistered) {
         return;
     }
-    listenerRegistered = true;
+    searchShardListenerRegistered = true;
     window.addEventListener('job-xray-search', (event) => {
         resetSearchShardCache();
         ingestSearchVacanciesShard(event.detail);

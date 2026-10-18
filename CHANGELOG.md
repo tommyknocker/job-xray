@@ -10,6 +10,7 @@ Version numbers match `package.json`, extension manifests, and Git tags (`v*`). 
 
 - Search **page 2+** (SPA pagination): hh often keeps the same URL and stale `#HH-Lux-InitialState`; badges now load from `/search/vacancy?page=N` HTML (XHR hook + content-script fetch), using the active pager link (`aria-current="true"`).
 - Stop resolve/fetch loops that could freeze or crash the tab after pagination (ignore stale InitialState once shard data is applied; skip observer feedback from our own badges).
+- Firefox build: duplicate top-level names in the bundled `content.js` (`listenerRegistered`, `MOUNT_RETRY_MS`) — AMO validation error.
 
 ## [0.1.3] - 2026-10-18
 

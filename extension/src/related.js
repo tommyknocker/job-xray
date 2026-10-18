@@ -4,12 +4,12 @@ import { mountOnSearchCard, vacancyIdFromCard } from './ui.js';
 
 /** Merged across every related_vacancies?page=N response on the same vacancy page. */
 const relatedById = new Map();
-let listenerRegistered = false;
+let relatedListenerRegistered = false;
 let suitableHeading = null;
 let hookSawPayload = false;
 let apiFallbackStarted = false;
 
-const MOUNT_RETRY_MS = [0, 80, 250, 600];
+const RELATED_MOUNT_RETRY_MS = [0, 80, 250, 600];
 
 function findSuitableHeading() {
     if (suitableHeading && document.contains(suitableHeading)) {
@@ -173,7 +173,7 @@ export function mountRelatedVacancyCards(excludeVacancyId = '') {
 }
 
 function scheduleRelatedMount(callback) {
-    for (const delay of MOUNT_RETRY_MS) {
+    for (const delay of RELATED_MOUNT_RETRY_MS) {
         window.setTimeout(callback, delay);
     }
 }
@@ -184,10 +184,10 @@ export function currentVacancyIdForPage(state) {
 }
 
 export function registerRelatedVacanciesListener(onPayload) {
-    if (listenerRegistered) {
+    if (relatedListenerRegistered) {
         return;
     }
-    listenerRegistered = true;
+    relatedListenerRegistered = true;
     window.addEventListener('job-xray-related', (event) => {
         hookSawPayload = true;
         ingestRelatedVacanciesPayload(event.detail);
