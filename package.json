@@ -1,0 +1,14 @@
+{
+  "name": "job-xray",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Surfaces hidden hh.ru vacancy response counters (total, unread, per day, real age).",
+  "scripts": {
+    "test": "node tests/run.mjs",
+    "build": "node scripts/build.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

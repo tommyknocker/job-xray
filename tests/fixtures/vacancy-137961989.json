@@ -1,0 +1,457 @@
+{
+  "analyticsParams": {
+    "hhtmSource": "vacancy",
+    "hhtmFrom": "",
+    "hhtmSourceLabel": "",
+    "hhtmFromLabel": "",
+    "brandingType": null,
+    "isBrandingPreview": "false",
+    "vacancyId": 137961989,
+    "activeTab": "main",
+    "active": "true",
+    "archived": "false",
+    "disabled": "false",
+    "waiting": "false",
+    "needFix": "false"
+  },
+  "hasNraProperty": false,
+  "hasNeuroSurveyProperty": false,
+  "hasAiAssistantProperty": false,
+  "vacancyOnlineUsersCounters": {},
+  "applicantVacancyResponseStatuses": {
+    "137961989": {
+      "test": {
+        "hasTests": false
+      },
+      "letterMaxLength": 10000,
+      "shortVacancy": {
+        "@workSchedule": "remote",
+        "@showContact": false,
+        "@responseLetterRequired": false,
+        "vacancyId": 137961989,
+        "name": "Senior PHP Backend Developer (Symfony)",
+        "company": {
+          "@showSimilarVacancies": true,
+          "@trusted": true,
+          "@category": "COMPANY",
+          "@countryId": 1,
+          "@employerWithSpecificCountryLaws": false,
+          "@state": "APPROVED",
+          "id": 5571967,
+          "name": "FX Back Office",
+          "visibleName": "FX Back Office",
+          "logos": {
+            "logo": [
+              {
+                "@type": "ORIGINAL",
+                "@url": "/employer-logo-original-round/6381051.png"
+              },
+              {
+                "@type": "employerPage",
+                "@url": "/employer-logo-round/6381052.png"
+              },
+              {
+                "@type": "searchResultsPage",
+                "@url": "/employer-logo-round/6381053.png"
+              },
+              {
+                "@type": "small",
+                "@url": "/employer-logo-round/6381053.png"
+              },
+              {
+                "@type": "vacancyPage",
+                "@url": "/employer-logo-round/6381054.png"
+              },
+              {
+                "@type": "medium",
+                "@url": "/employer-logo-round/6381054.png"
+              }
+            ]
+          },
+          "employerOrganizationFormId": 10,
+          "showOrganizationForm": false,
+          "companySiteUrl": "https://fxbackoffice.com/",
+          "accreditedITEmployer": false,
+          "employerOnAdditionalCheck": false
+        },
+        "compensation": {
+          "noCompensation": {}
+        },
+        "publicationTime": {
+          "@timestamp": 1792060507,
+          "$": "2026-10-15T13:35:07.498+03:00"
+        },
+        "area": {
+          "@id": 236,
+          "name": "Кипр",
+          "path": ".1001.236."
+        },
+        "acceptTemporary": false,
+        "address": {
+          "@id": 20689823,
+          "@disabled": false,
+          "@wrong": false,
+          "city": "Лимасол",
+          "street": "Lavyrinthou",
+          "building": "8",
+          "displayName": "Лимасол, Lavyrinthou, 8",
+          "mapData": "{\"points\":{\"center\":{\"lng\":33.0243988496613,\"lat\":34.69643115032086,\"zoom\":17},\"marker\":{\"lng\":33.024398849661296,\"lat\":34.696431150296924}}}",
+          "marker": {
+            "@lat": 34.696431150296924,
+            "@lng": 33.024398849661296
+          },
+          "manager": {
+            "@id": 11200131
+          }
+        },
+        "creationSite": "ekaterinburg.hh.ru",
+        "creationSiteId": 9,
+        "displayHost": "nn.hh.ru",
+        "lastChangeTime": {
+          "@timestamp": 1792060969,
+          "$": "2026-10-15T13:42:49.408+03:00"
+        },
+        "creationTime": "2026-09-30T13:35:07.498+03:00",
+        "canBeShared": true,
+        "employerManager": null,
+        "inboxPossibility": true,
+        "chatWritePossibility": "ENABLED_AFTER_INVITATION",
+        "notify": false,
+        "links": {
+          "desktop": "https://nn.hh.ru/vacancy/137961989",
+          "mobile": "https://m.hh.ru/vacancy/137961989"
+        },
+        "acceptIncompleteResumes": false,
+        "driverLicenseTypes": [
+          {}
+        ],
+        "languages": [
+          {
+            "language": [
+              {
+                "id": 57,
+                "isoCode": "eng",
+                "degree": "b1"
+              }
+            ]
+          }
+        ],
+        "workingDays": [
+          {}
+        ],
+        "workingTimeIntervals": [
+          {}
+        ],
+        "workingTimeModes": [
+          {}
+        ],
+        "vacancyProperties": {
+          "properties": [
+            {
+              "property": [
+                {
+                  "id": 710244291,
+                  "propertyType": "HH_STANDARD_PLUS",
+                  "defining": true,
+                  "classifying": true,
+                  "bundle": "HH",
+                  "propertyWeight": 600,
+                  "parameters": [
+                    {
+                      "parameter": [
+                        {
+                          "key": "packageName",
+                          "value": "RENEWAL_VP"
+                        },
+                        {
+                          "key": "serviceId",
+                          "value": "68484020"
+                        }
+                      ]
+                    }
+                  ],
+                  "startTimeIso": "2026-09-30T13:35:07.498+03:00",
+                  "endTimeIso": "2026-10-30T13:35:07.498+03:00"
+                },
+                {
+                  "id": 710244292,
+                  "propertyType": "HH_AUTO_RENEWAL",
+                  "bundle": "HH",
+                  "propertyWeight": 600,
+                  "parameters": [
+                    {
+                      "parameter": [
+                        {
+                          "key": "intervalMinutes",
+                          "value": "4320"
+                        },
+                        {
+                          "key": "packageName",
+                          "value": "RENEWAL_VP"
+                        },
+                        {
+                          "key": "serviceId",
+                          "value": "68484020"
+                        },
+                        {
+                          "key": "nextActivationTimeIso",
+                          "value": "2026-10-18T13:35:07.498+03:00"
+                        }
+                      ]
+                    }
+                  ],
+                  "startTimeIso": "2026-09-30T13:35:07.498+03:00",
+                  "endTimeIso": "2026-10-30T13:35:07.498+03:00"
+                },
+                {
+                  "id": 710244290,
+                  "propertyType": "HH_SEARCH_RESULTS_NORMAL_POSITION",
+                  "bundle": "HH",
+                  "propertyWeight": 600,
+                  "parameters": [
+                    {
+                      "parameter": [
+                        {
+                          "key": "packageName",
+                          "value": "RENEWAL_VP"
+                        },
+                        {
+                          "key": "serviceId",
+                          "value": "68484020"
+                        }
+                      ]
+                    }
+                  ],
+                  "startTimeIso": "2026-09-30T13:35:07.498+03:00",
+                  "endTimeIso": "2026-10-30T13:35:07.498+03:00"
+                }
+              ]
+            }
+          ],
+          "calculatedStates": {
+            "HH": {
+              "advertising": false,
+              "anonymous": false,
+              "filteredPropertyNames": [
+                "HH_STANDARD_PLUS",
+                "HH_SEARCH_RESULTS_NORMAL_POSITION",
+                "HH_AUTO_RENEWAL"
+              ],
+              "free": false,
+              "inPlatformCommunication": false,
+              "optimum": false,
+              "optionPremium": false,
+              "payForPerformance": false,
+              "premium": false,
+              "standard": false,
+              "standardPlus": true,
+              "translationKeys": [
+                "employer.VacancyCreate.PublicationType.STANDARD_PLUS"
+              ],
+              "virtualRecruiter": false,
+              "translation": "Стандарт плюс"
+            }
+          }
+        },
+        "vacancyPlatforms": [
+          "HH"
+        ],
+        "professionalRoleIds": [
+          {
+            "professionalRoleId": [
+              96
+            ]
+          }
+        ],
+        "workExperience": "moreThan6",
+        "employment": {
+          "@type": "FULL"
+        },
+        "closedForApplicants": false,
+        "userTestPresent": false,
+        "employmentForm": "FULL",
+        "flyInFlyOutDurations": [
+          {}
+        ],
+        "sideJob": false,
+        "internship": false,
+        "nightShifts": false,
+        "workFormats": [
+          {
+            "workFormatsElement": [
+              "ON_SITE",
+              "REMOTE",
+              "HYBRID"
+            ]
+          }
+        ],
+        "workScheduleByDays": [
+          {
+            "workScheduleByDaysElement": [
+              "FIVE_ON_TWO_OFF"
+            ]
+          }
+        ],
+        "workingHours": [
+          {
+            "workingHoursElement": [
+              "HOURS_8"
+            ]
+          }
+        ],
+        "experimentalModes": [
+          {
+            "experimentalMode": [
+              "newContractFields",
+              "newEmploymentTerms",
+              "ageRestrictions",
+              "usingNewInclusivenessFields",
+              "newCompensationModes"
+            ]
+          }
+        ],
+        "acceptLaborContract": false,
+        "civilLawContracts": [
+          {}
+        ],
+        "autoResponse": {
+          "acceptAutoResponse": true
+        },
+        "inclusivenessTypes": [
+          {}
+        ],
+        "contactInfo": null
+      },
+      "usedResumeIds": [],
+      "unusedResumeIds": [],
+      "unfinishedResumeIds": [],
+      "hiddenResumeIds": []
+    }
+  },
+  "vacancyView": {
+    "vacancyFull": {
+      "extraVacancyFields": {
+        "aiAssistantInfo": {
+          "hasEverBeenEnabled": false,
+          "isCurrentlyEnabled": false
+        },
+        "allowChatWithManager": false,
+        "skillsSurveyProfession": null,
+        "userLabels": [],
+        "totalResponsesCount": 435,
+        "vacancyResponsesCount": 447,
+        "tags": [
+          {
+            "id": "vacancy-serp__vacancy-work-experience-moreThan6",
+            "text": "Опыт более 6 лет",
+            "icon": "BriefcaseOutlinedSize16"
+          },
+          {
+            "id": "vacancy-label-work-schedule-remote",
+            "text": "Можно удалённо"
+          }
+        ],
+        "labels": [],
+        "extraLabels": []
+      },
+      "vacancy": {
+        "vacancyId": 137961989,
+        "name": "Senior PHP Backend Developer (Symfony)",
+        "publicationTimeIso": "2026-10-15T13:35:07.498+03:00",
+        "vacancyProperties": {
+          "id": "HH_STANDARD_PLUS-HH_AUTO_RENEWAL-HH_SEARCH_RESULTS_NORMAL_POSITION",
+          "properties": [
+            {
+              "id": 710244291,
+              "propertyType": "HH_STANDARD_PLUS",
+              "defining": true,
+              "classifying": true,
+              "bundle": "HH",
+              "propertyWeight": 600,
+              "parameters": [
+                {
+                  "key": "serviceId",
+                  "value": "68484020"
+                },
+                {
+                  "key": "packageName",
+                  "value": "RENEWAL_VP"
+                }
+              ],
+              "startTimeIso": "2026-09-30T13:35:07.498+03:00",
+              "endTimeIso": "2026-10-30T13:35:07.498+03:00"
+            },
+            {
+              "id": 710244292,
+              "propertyType": "HH_AUTO_RENEWAL",
+              "bundle": "HH",
+              "propertyWeight": 600,
+              "parameters": [
+                {
+                  "key": "serviceId",
+                  "value": "68484020"
+                },
+                {
+                  "key": "packageName",
+                  "value": "RENEWAL_VP"
+                },
+                {
+                  "key": "intervalMinutes",
+                  "value": "4320"
+                },
+                {
+                  "key": "nextActivationTimeIso",
+                  "value": "2026-10-18T13:35:07.498+03:00"
+                }
+              ],
+              "startTimeIso": "2026-09-30T13:35:07.498+03:00",
+              "endTimeIso": "2026-10-30T13:35:07.498+03:00"
+            },
+            {
+              "id": 710244290,
+              "propertyType": "HH_SEARCH_RESULTS_NORMAL_POSITION",
+              "bundle": "HH",
+              "propertyWeight": 600,
+              "parameters": [
+                {
+                  "key": "serviceId",
+                  "value": "68484020"
+                },
+                {
+                  "key": "packageName",
+                  "value": "RENEWAL_VP"
+                }
+              ],
+              "startTimeIso": "2026-09-30T13:35:07.498+03:00",
+              "endTimeIso": "2026-10-30T13:35:07.498+03:00"
+            }
+          ],
+          "calculatedStates": {
+            "HH": {
+              "free": false,
+              "standard": false,
+              "standardPlus": true,
+              "optimum": false,
+              "premium": false,
+              "anonymous": false,
+              "advertising": false,
+              "optionPremium": false,
+              "payForPerformance": false,
+              "virtualRecruiter": false,
+              "inPlatformCommunication": false,
+              "translationKeys": [
+                "employer.VacancyCreate.PublicationType.STANDARD_PLUS"
+              ],
+              "filteredPropertyNames": [
+                "HH_AUTO_RENEWAL",
+                "HH_STANDARD_PLUS",
+                "HH_SEARCH_RESULTS_NORMAL_POSITION"
+              ],
+              "translation": "Стандарт плюс"
+            }
+          }
+        }
+      }
+    }
+  }
+}
