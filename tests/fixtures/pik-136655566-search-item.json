@@ -1,0 +1,403 @@
+{
+  "@workSchedule": "remote",
+  "@showContact": false,
+  "@responseLetterRequired": true,
+  "vacancyId": 136655566,
+  "name": "Старший Backend-разработчик PHP (лидер команды)",
+  "company": {
+    "@showSimilarVacancies": true,
+    "@trusted": true,
+    "@category": "COMPANY",
+    "@countryId": 1,
+    "@employerWithSpecificCountryLaws": false,
+    "@structureName": "12550",
+    "@state": "APPROVED",
+    "id": 12550,
+    "name": "ПИК-специализированный застройщик",
+    "visibleName": "ПИК-специализированный застройщик. ПИК",
+    "structureName": "12550",
+    "logos": {
+      "logo": [
+        {
+          "@type": "ORIGINAL",
+          "@url": "/employer-logo-original-round/3589806.jpeg"
+        },
+        {
+          "@type": "employerPage",
+          "@url": "/employer-logo-round/3589806.jpeg"
+        },
+        {
+          "@type": "searchResultsPage",
+          "@url": "/employer-logo-round/3589807.jpeg"
+        },
+        {
+          "@type": "small",
+          "@url": "/employer-logo-round/3589807.jpeg"
+        },
+        {
+          "@type": "vacancyPage",
+          "@url": "/employer-logo-round/3589808.jpeg"
+        },
+        {
+          "@type": "medium",
+          "@url": "/employer-logo-round/3589808.jpeg"
+        }
+      ],
+      "@showInSearch": true
+    },
+    "department": {
+      "@name": "ПИК-специализированный застройщик. ПИК",
+      "@code": "12550-12550-pik"
+    },
+    "mainEmployerId": 12550,
+    "badges": {
+      "badge": [
+        {
+          "type": "employer-hh-rating",
+          "description": "Топ-100 Рейтинга работодателей hh.ru (крупнейшие&nbsp;компании)",
+          "url": "https://rating.hh.ru/poll/",
+          "position": "87",
+          "year": 2025
+        },
+        {
+          "type": "hrbrand",
+          "description": "Победитель Премии HR-бренд",
+          "url": "http://hrbrand.ru/",
+          "position": "winner"
+        }
+      ]
+    },
+    "companySiteUrl": "https://www.pik.ru/",
+    "accreditedITEmployer": false,
+    "employerOnAdditionalCheck": false,
+    "employerReviews": {
+      "totalRating": "4.4",
+      "reviewsCount": 2710
+    }
+  },
+  "compensation": {
+    "noCompensation": {}
+  },
+  "publicationTime": {
+    "@timestamp": 1790340092,
+    "$": "2026-09-25T15:41:32.978+03:00"
+  },
+  "area": {
+    "@id": 1,
+    "name": "Москва",
+    "path": ".113.232.1."
+  },
+  "hr-brand": {
+    "@url": "http://hrbrand.ru/",
+    "type": "winner"
+  },
+  "acceptTemporary": false,
+  "address": {
+    "@id": 5527096,
+    "@disabled": false,
+    "@wrong": false,
+    "metroStations": {
+      "@lat": 55.760793,
+      "@lng": 37.581242,
+      "metro": [
+        {
+          "@isAlias": false,
+          "@cityId": 1,
+          "@id": 16,
+          "@name": "metro.16",
+          "@order": 9,
+          "@translit": "barrikadnaya",
+          "id": 16,
+          "lat": 55.760793,
+          "line": {
+            "@id": 7,
+            "@name": "metroline.7",
+            "@translit": "tagansko_krasnopresnenskaya",
+            "@cityId": 1,
+            "id": 7,
+            "name": "Таганско-Краснопресненская",
+            "color": "#943E90"
+          },
+          "lng": 37.581242,
+          "name": "Баррикадная"
+        },
+        {
+          "@isAlias": false,
+          "@cityId": 1,
+          "@id": 58,
+          "@name": "metro.58",
+          "@order": 11,
+          "@translit": "krasnopresnenskaya",
+          "id": 58,
+          "lat": 55.760378,
+          "line": {
+            "@id": 5,
+            "@name": "metroline.5",
+            "@translit": "koltsevaya",
+            "@cityId": 1,
+            "id": 5,
+            "name": "Кольцевая",
+            "color": "#915133"
+          },
+          "lng": 37.577114,
+          "name": "Краснопресненская"
+        }
+      ]
+    },
+    "city": "Москва",
+    "street": "Баррикадная улица",
+    "building": "19с1",
+    "displayName": "Москва, Баррикадная улица, 19с1",
+    "mapData": "{\"points\":{\"center\":{\"lat\":55.76052708357964,\"lng\":37.57917800000001,\"zoom\":18},\"marker\":{\"lat\":55.76026116538861,\"lng\":37.5799372969584}}}",
+    "marker": {
+      "@lat": 55.76026116538861,
+      "@lng": 37.5799372969584
+    },
+    "manager": {
+      "@id": 13178188
+    },
+    "districtDto": {
+      "id": 123,
+      "isMicroDistrict": false,
+      "name": "Пресненский"
+    }
+  },
+  "template": "makeup:5586",
+  "creationSite": "spb.hh.ru",
+  "creationSiteId": 7,
+  "displayHost": "nn.hh.ru",
+  "lastChangeTime": {
+    "@timestamp": 1790340093,
+    "$": "2026-09-25T15:41:33.032+03:00"
+  },
+  "creationTime": "2026-08-26T17:29:11.914+03:00",
+  "canBeShared": true,
+  "employerManager": {
+    "latestActivity": "online"
+  },
+  "inboxPossibility": true,
+  "chatWritePossibility": "ENABLED_AFTER_INVITATION",
+  "notify": false,
+  "links": {
+    "desktop": "https://nn.hh.ru/vacancy/136655566",
+    "mobile": "https://m.hh.ru/vacancy/136655566"
+  },
+  "acceptIncompleteResumes": false,
+  "driverLicenseTypes": [
+    {}
+  ],
+  "languages": [
+    {}
+  ],
+  "workingDays": [
+    {}
+  ],
+  "workingTimeIntervals": [
+    {}
+  ],
+  "workingTimeModes": [
+    {}
+  ],
+  "division": {
+    "@id": 94
+  },
+  "vacancyProperties": {
+    "properties": [
+      {
+        "property": [
+          {
+            "id": 703698865,
+            "propertyType": "HH_STANDARD",
+            "defining": true,
+            "classifying": true,
+            "bundle": "HH",
+            "propertyWeight": 400,
+            "parameters": [
+              {
+                "parameter": [
+                  {
+                    "key": "packageName",
+                    "value": "VP"
+                  },
+                  {
+                    "key": "serviceId",
+                    "value": "65697511"
+                  }
+                ]
+              }
+            ],
+            "startTimeIso": "2026-09-25T15:41:32+03:00",
+            "endTimeIso": "2026-10-25T15:41:32+03:00"
+          },
+          {
+            "id": 703698863,
+            "propertyType": "HH_RESUME_GIFTS",
+            "bundle": "HH",
+            "propertyWeight": 400,
+            "parameters": [
+              {
+                "parameter": [
+                  {
+                    "key": "giftsCount",
+                    "value": "15"
+                  },
+                  {
+                    "key": "packageName",
+                    "value": "VP"
+                  },
+                  {
+                    "key": "serviceId",
+                    "value": "65697511"
+                  }
+                ]
+              }
+            ],
+            "startTimeIso": "2026-09-25T15:41:32+03:00",
+            "endTimeIso": "2026-10-25T15:41:32+03:00"
+          },
+          {
+            "id": 703698864,
+            "propertyType": "HH_SEARCH_RESULTS_NORMAL_POSITION",
+            "bundle": "HH",
+            "propertyWeight": 400,
+            "parameters": [
+              {
+                "parameter": [
+                  {
+                    "key": "packageName",
+                    "value": "VP"
+                  },
+                  {
+                    "key": "serviceId",
+                    "value": "65697511"
+                  }
+                ]
+              }
+            ],
+            "startTimeIso": "2026-09-25T15:41:32+03:00",
+            "endTimeIso": "2026-10-25T15:41:32+03:00"
+          }
+        ]
+      }
+    ],
+    "calculatedStates": {
+      "HH": {
+        "advertising": false,
+        "anonymous": false,
+        "filteredPropertyNames": [
+          "HH_STANDARD",
+          "HH_SEARCH_RESULTS_NORMAL_POSITION",
+          "HH_RESUME_GIFTS"
+        ],
+        "free": false,
+        "inPlatformCommunication": false,
+        "optimum": false,
+        "optionPremium": false,
+        "payForPerformance": false,
+        "premium": false,
+        "standard": true,
+        "standardPlus": false,
+        "translationKeys": [
+          "employer.VacancyCreate.PublicationType.STANDARD"
+        ],
+        "virtualRecruiter": false,
+        "translation": "Стандарт"
+      }
+    }
+  },
+  "vacancyPlatforms": [
+    "HH"
+  ],
+  "professionalRoleIds": [
+    {
+      "professionalRoleId": [
+        96
+      ]
+    }
+  ],
+  "workExperience": "between3And6",
+  "employment": {
+    "@type": "FULL"
+  },
+  "closedForApplicants": false,
+  "userTestPresent": false,
+  "employmentForm": "FULL",
+  "flyInFlyOutDurations": [
+    {}
+  ],
+  "internship": false,
+  "nightShifts": false,
+  "workFormats": [
+    {
+      "workFormatsElement": [
+        "REMOTE",
+        "HYBRID"
+      ]
+    }
+  ],
+  "workScheduleByDays": [
+    {
+      "workScheduleByDaysElement": [
+        "FIVE_ON_TWO_OFF"
+      ]
+    }
+  ],
+  "workingHours": [
+    {
+      "workingHoursElement": [
+        "HOURS_8"
+      ]
+    }
+  ],
+  "experimentalModes": [
+    {
+      "experimentalMode": [
+        "newContractFields",
+        "newEmploymentTerms",
+        "usingNewInclusivenessFields",
+        "newCompensationModes"
+      ]
+    }
+  ],
+  "acceptLaborContract": true,
+  "civilLawContracts": [
+    {}
+  ],
+  "autoResponse": {
+    "acceptAutoResponse": false
+  },
+  "inclusivenessTypes": [
+    {}
+  ],
+  "contactInfo": null,
+  "branding": {
+    "type": "MAKEUP"
+  },
+  "userLabels": [],
+  "responsesCount": 636,
+  "totalResponsesCount": 1940,
+  "online_users_count": 3,
+  "show_question_input": true,
+  "allowChatWithManager": false,
+  "tags": [
+    {
+      "id": "vacancy-serp__vacancy-work-experience-between3And6",
+      "text": "Опыт 3-6 лет",
+      "icon": "BriefcaseOutlinedSize16"
+    },
+    {
+      "id": "vacancy-label-work-schedule-remote",
+      "text": "Можно удалённо"
+    }
+  ],
+  "labels": [
+    {
+      "id": "vacancy-label-skillsPercentage",
+      "text": "Подходит по&nbsp;навыкам на&nbsp;100%",
+      "icon": "ThumbUpOutlinedSize16"
+    }
+  ],
+  "extraLabels": [],
+  "searchRid": "179232313993107208a630eed8e2b005",
+  "positionInRequest": 11
+}

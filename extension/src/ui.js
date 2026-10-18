@@ -1,4 +1,4 @@
-import { CHIP, TOOLTIP } from './copy.ru.js';
+import { CHIP, badgeTooltipParts } from './copy.ru.js';
 import { formatAge, formatCount, formatPerDay } from './metrics.js';
 
 const STYLES = `
@@ -136,12 +136,7 @@ export function createBadge(signals, variant = 'search') {
     wrap.appendChild(row);
     shadow.appendChild(wrap);
 
-    host.title = [
-        signals.title,
-        signals.total != null ? TOOLTIP.responses(signals.total) : null,
-        signals.unread != null ? TOOLTIP.unread(signals.unread) : null,
-        signals.perDay != null ? TOOLTIP.perDay(signals.perDay) : null,
-    ].filter(Boolean).join(' · ');
+    host.title = badgeTooltipParts(signals, variant).join(' · ');
 
     return host;
 }

@@ -1,0 +1,15 @@
+{
+  "vacancySearchResult": {
+    "vacancies": [
+      {
+        "vacancyId": 136655566,
+        "name": "Backend PHP",
+        "vacancyResponsesCount": 861,
+        "totalResponsesCount": 1750,
+        "responsesCount": 636,
+        "creationTime": "2025-08-26T10:00:00+03:00",
+        "publicationTime": "2026-10-01T10:00:00+03:00"
+      }
+    ]
+  }
+}

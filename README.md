@@ -64,4 +64,4 @@ npm test
 
 ## GitHub releases
 
-Tag `v0.1.0` (must match `package.json` version) and push. CI builds the packages and attaches them to the GitHub Release under the stable names above.
+Tag `v0.1.1` (must match `package.json` version) and push. CI builds the packages and attaches them to the GitHub Release under the stable names above.

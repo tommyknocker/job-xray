@@ -26,6 +26,34 @@ export const TOOLTIP = {
     perDay: (n) => `${n.toFixed(1)} в день`,
 };
 
+/** Tooltip lines are per surface (search vs vacancy); hh uses different counters in each payload. */
+export function badgeTooltipParts(signals, variant) {
+    const parts = [];
+    if (signals.title) {
+        parts.push(signals.title);
+    }
+    if (signals.total != null) {
+        if (variant === 'search') {
+            parts.push(`откликов (выдача hh.ru): ${signals.total}`);
+            if (signals.countersUnstable && signals.totalAlt != null) {
+                parts.push(`ещё счётчик в выдаче: ${signals.totalAlt}`);
+            }
+        } else {
+            parts.push(`откликов (страница вакансии): ${signals.total}`);
+            if (signals.countersUnstable && signals.totalAlt != null) {
+                parts.push(`ещё счётчик на странице: ${signals.totalAlt}`);
+            }
+        }
+    }
+    if (signals.unread != null) {
+        parts.push(TOOLTIP.unread(signals.unread));
+    }
+    if (signals.perDay != null) {
+        parts.push(TOOLTIP.perDay(signals.perDay));
+    }
+    return parts;
+}
+
 export function formatPerDayRu(value) {
     if (value == null || Number.isNaN(value)) {
         return null;

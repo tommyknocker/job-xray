@@ -24,15 +24,100 @@ function parseJsonPayload(raw) {
     }
 }
 
-export function extractInitialStateFromHtml(html) {
-    const match = html.match(
-        /<template[^>]*id="HH-Lux-InitialState"[^>]*>([\s\S]*?)<\/template>/i,
+function stripViewSourceInspectorHtml(html) {
+    if (!html.includes('html-attribute-value')) {
+        return html;
+    }
+
+    return unescapeHtml(
+        html
+            .replace(/<span class="html-[^"]*">/gi, '')
+            .replace(/<\/span>/gi, ''),
     );
-    if (!match) {
+}
+
+function extractJsonAfterMarker(html, marker = STATE_ID) {
+    const idx = html.indexOf(marker);
+    if (idx < 0) {
         return null;
     }
 
-    return parseJsonPayload(match[1]);
+    const start = html.indexOf('{', idx);
+    if (start < 0) {
+        return null;
+    }
+
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+
+    for (let i = start; i < html.length; i += 1) {
+        const ch = html[i];
+        if (inString) {
+            if (escaped) {
+                escaped = false;
+            } else if (ch === '\\') {
+                escaped = true;
+            } else if (ch === '"') {
+                inString = false;
+            }
+            continue;
+        }
+
+        if (ch === '"') {
+            inString = true;
+            continue;
+        }
+        if (ch === '{') {
+            depth += 1;
+        } else if (ch === '}') {
+            depth -= 1;
+            if (depth === 0) {
+                try {
+                    return parseJsonPayload(html.slice(start, i + 1));
+                } catch {
+                    return null;
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+export function extractInitialStateFromHtml(html) {
+    const templateMatch = html.match(
+        /<template[^>]*id="HH-Lux-InitialState"[^>]*>([\s\S]*?)<\/template>/i,
+    );
+    if (templateMatch) {
+        return parseJsonPayload(templateMatch[1]);
+    }
+
+    for (const candidate of [html, stripViewSourceInspectorHtml(html)]) {
+        const fromMarker = extractJsonAfterMarker(candidate);
+        if (fromMarker) {
+            return fromMarker;
+        }
+
+        const nestedTemplate = candidate.match(
+            /<template[^>]*id="HH-Lux-InitialState"[^>]*>([\s\S]*?)<\/template>/i,
+        );
+        if (nestedTemplate) {
+            return parseJsonPayload(nestedTemplate[1]);
+        }
+    }
+
+    return null;
+}
+
+export function normalizeResponseTotals(vacancyResponsesCount, totalResponsesCount) {
+    const vrc = toInt(vacancyResponsesCount);
+    const trc = toInt(totalResponsesCount);
+
+    return {
+        total: vrc ?? trc,
+        totalAlt: trc,
+    };
 }
 
 export function readInitialStateFromDocument(doc = document) {
@@ -96,11 +181,16 @@ function boolish(value) {
 export function normalizeSearchVacancy(raw) {
     const properties = collectPropertyTypes(raw.vacancyProperties);
     const auto = raw.autoResponse;
+    const { total, totalAlt } = normalizeResponseTotals(
+        raw.vacancyResponsesCount,
+        raw.totalResponsesCount,
+    );
 
     return {
         id: String(raw.vacancyId ?? ''),
         title: raw.name || '',
-        total: toInt(raw.totalResponsesCount),
+        total,
+        totalAlt,
         unread: toInt(raw.responsesCount),
         createdAt: parseIso(raw.creationTime),
         publishedAt: parseIso(raw.publicationTime),
@@ -147,12 +237,16 @@ export function extractVacancyPage(state) {
     const shortVacancy = status.shortVacancy || {};
     const properties = collectPropertyTypes(vacancy.vacancyProperties);
     const calc = vacancy.vacancyProperties?.calculatedStates?.HH || {};
+    const { total, totalAlt } = normalizeResponseTotals(
+        extra.vacancyResponsesCount,
+        extra.totalResponsesCount,
+    );
 
     return {
         id,
         title: vacancy.name || '',
-        total: toInt(extra.vacancyResponsesCount ?? extra.totalResponsesCount),
-        totalAlt: toInt(extra.totalResponsesCount),
+        total,
+        totalAlt,
         unread: null,
         createdAt: parseIso(shortVacancy.creationTime),
         publishedAt: parseIso(vacancy.publicationTimeIso),

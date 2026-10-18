@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { extractInitialStateFromHtml, extractSearchVacancies, extractVacancy, extractVacancyPage, vacancyIdFromPath } from '../extension/src/parser.js';
+import { extractInitialStateFromHtml, extractSearchVacancies, extractVacancy, extractVacancyPage, normalizeSearchVacancy, normalizeResponseTotals, vacancyIdFromPath } from '../extension/src/parser.js';
 import { computeSignals, formatAge, formatPerDay, toneOf } from '../extension/src/metrics.js';
 import { chipsFor } from '../extension/src/ui.js';
 
@@ -85,5 +85,33 @@ assert.equal(fx.tariff, 'Стандарт плюс');
 assert.equal(fx.bumped, true);
 assert.equal(vacancyIdFromPath('/vacancy/137961989'), '137961989');
 assert.equal(extractVacancy(searchState, '/vacancy/138567663')?.id, '138567663');
+
+const dualSearch = JSON.parse(readFileSync(join(root, 'tests/fixtures/search-dual-counters.json'), 'utf8'));
+const dualItem = computeSignals(extractSearchVacancies(dualSearch)[0], NOW);
+assert.equal(dualItem.total, 861);
+assert.equal(dualItem.totalAlt, 1750);
+assert.ok(dualItem.countersUnstable);
+
+const pikSearchItem = JSON.parse(readFileSync(join(root, 'tests/fixtures/pik-136655566-search-item.json'), 'utf8'));
+const pikSerp = computeSignals(normalizeSearchVacancy(pikSearchItem), NOW);
+assert.equal(pikSerp.total, 1940);
+assert.equal(pikSerp.unread, 636);
+assert.equal(pikSerp.totalAlt, 1940);
+assert.equal(pikSerp.countersUnstable, false);
+
+const pikExtra = JSON.parse(readFileSync(join(root, 'tests/fixtures/pik-136655566-vacancy-extra.json'), 'utf8'));
+const pikPage = computeSignals({
+    id: '136655566',
+    title: 'Backend PHP',
+    ...normalizeResponseTotals(pikExtra.vacancyResponsesCount, pikExtra.totalResponsesCount),
+    unread: null,
+    createdAt: new Date('2025-08-26T10:00:00+03:00'),
+    publishedAt: new Date('2026-10-01T10:00:00+03:00'),
+    properties: [],
+    source: 'vacancy',
+}, NOW);
+assert.equal(pikPage.total, 861);
+assert.equal(pikPage.totalAlt, 1750);
+assert.ok(pikPage.countersUnstable);
 
 console.log(`ok: ${search.length} search vacancies, vacancy pages parsed`);
