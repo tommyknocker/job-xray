@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { extractInitialStateFromHtml, extractSearchVacancies, extractVacancy, extractVacancyPage, normalizeSearchVacancy, normalizeResponseTotals, vacancyIdFromPath } from '../extension/src/parser.js';
+import { extractInitialStateFromHtml, extractRelatedVacanciesShard, extractSearchVacancies, extractVacancy, extractVacancyPage, normalizeSearchVacancy, normalizeResponseTotals, vacancyIdFromPath } from '../extension/src/parser.js';
+import { ingestRelatedVacanciesPayload, relatedVacancyCacheSize, resetRelatedVacancyCache } from '../extension/src/related.js';
 import { computeSignals, formatAge, formatPerDay, toneOf } from '../extension/src/metrics.js';
 import { chipsFor } from '../extension/src/ui.js';
 
@@ -128,5 +129,21 @@ assert.equal(freshSignals.perDay, null);
 const freshRateChips = chipsFor(freshSignals, 'vacancy').map((chip) => chip.text);
 assert.ok(freshRateChips.some((text) => text.includes('/час')));
 assert.ok(!freshRateChips.some((text) => text.includes('/день')));
+
+const relatedShard = JSON.parse(readFileSync(join(root, 'tests/fixtures/related-vacancies.json'), 'utf8'));
+const related = extractRelatedVacanciesShard(relatedShard);
+assert.equal(related.length, 2);
+assert.equal(related[0].id, '138308159');
+assert.equal(related[0].total, 193);
+assert.equal(related[1].id, '136119047');
+assert.equal(related[1].total, 253);
+assert.equal(related[1].unread, 132);
+assert.notEqual(related[1].total, related[1].unread);
+
+resetRelatedVacancyCache();
+ingestRelatedVacanciesPayload({ vacancies: [relatedShard.vacancies[0]] });
+assert.equal(relatedVacancyCacheSize(), 1);
+ingestRelatedVacanciesPayload({ vacancies: [relatedShard.vacancies[1]] });
+assert.equal(relatedVacancyCacheSize(), 2);
 
 console.log(`ok: ${search.length} search vacancies, vacancy pages parsed`);

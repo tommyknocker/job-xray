@@ -64,6 +64,6 @@ npm test
 
 ## GitHub releases
 
-Tag `v0.1.2` (must match `package.json` version) and push. CI builds the packages and attaches them to the GitHub Release under the stable names above.
+Tag `v0.1.3` (must match `package.json` version) and push. CI builds the packages and attaches them to the GitHub Release under the stable names above.
 
 After tagging, add the same release notes to [job-xray-site](https://github.com/tommyknocker/job-xray-site) (`data/changelog.php`, `config/site.php`). See [CHANGELOG.md](CHANGELOG.md).

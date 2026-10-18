@@ -5,6 +5,13 @@ import {
     readInitialStateFromDocument,
 } from './parser.js';
 import { computeSignals } from './metrics.js';
+import {
+    currentVacancyIdForPage,
+    maybeFetchRelatedVacancies,
+    mountRelatedVacancyCards,
+    registerRelatedVacanciesListener,
+    resetRelatedVacancyCache,
+} from './related.js';
 import { mountOnSearchCard, mountOnVacancyPage, vacancyIdFromCard } from './ui.js';
 
 const SCAN_INTERVAL_MS = 800;
@@ -69,6 +76,7 @@ function scan(force = false) {
 
     if (hrefChanged) {
         document.querySelectorAll('[data-job-xray-surface="vacancy"]').forEach((node) => node.remove());
+        resetRelatedVacancyCache();
     }
 
     const state = readInitialStateFromDocument();
@@ -86,7 +94,12 @@ function scan(force = false) {
         return;
     }
     if (page === 'vacancy') {
+        const vacancyId = currentVacancyIdForPage(state);
         mountVacancy(state);
+        mountRelatedVacancyCards(vacancyId);
+        maybeFetchRelatedVacancies(state, () => {
+            mountRelatedVacancyCards(vacancyId);
+        });
     }
 }
 
@@ -125,6 +138,11 @@ function observe() {
     observer.observe(document.documentElement, { childList: true, subtree: true });
     setInterval(() => scan(), SCAN_INTERVAL_MS);
 }
+
+registerRelatedVacanciesListener(() => {
+    const state = readInitialStateFromDocument();
+    mountRelatedVacancyCards(currentVacancyIdForPage(state));
+});
 
 hookHistory();
 scan(true);

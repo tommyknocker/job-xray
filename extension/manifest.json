@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "job-xray",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Surfaces hidden hh.ru vacancy response counters (total, unread, per day, real age). UI labels are Russian on the site.",
   "icons": {
     "16": "icons/icon16.png",
@@ -14,13 +14,21 @@
         "*://hh.ru/*",
         "*://*.hh.ru/*"
       ],
+      "js": ["src/network-hook.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "*://hh.ru/*",
+        "*://*.hh.ru/*"
+      ],
       "js": ["loader.js"],
       "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["src/*.js"],
+      "resources": ["src/*.js", "page-network-hook.js"],
       "matches": [
         "*://hh.ru/*",
         "*://*.hh.ru/*"

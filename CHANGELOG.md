@@ -4,6 +4,20 @@ All notable changes to **job-xray** are documented here. The format follows [Kee
 
 Version numbers match `package.json`, extension manifests, and Git tags (`v*`). Website copy lives in [job-xray-site](https://github.com/tommyknocker/job-xray-site) (`data/changelog.php`).
 
+## [0.1.3] - 2026-10-18
+
+### Added
+
+- Vacancy page: badges on **«Вам подойдут эти вакансии»** — same metrics as search, from the `related_vacancies` shard (all loaded pages merged).
+
+### Changed
+
+- Search and recommendation cards: chips sit **under the title**, before experience / format tags (one layout everywhere).
+
+### Fixed
+
+- Capture `related_vacancies` in the page context (main-world hook); content-script `fetch` alone did not see hh.ru requests. Fallback fetch from the extension if the hook misses.
+
 ## [0.1.2] - 2026-10-18
 
 ### Added
@@ -36,6 +50,7 @@ Version numbers match `package.json`, extension manifests, and Git tags (`v*`). 
 - Chromium and Firefox release packages via GitHub Actions (`job-xray-chromium.zip`, `job-xray-firefox.xpi`).
 - Local-only processing: reads `#HH-Lux-InitialState` on open hh.ru pages; no backend or telemetry.
 
+[0.1.3]: https://github.com/tommyknocker/job-xray/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/tommyknocker/job-xray/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/tommyknocker/job-xray/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/tommyknocker/job-xray/releases/tag/v0.1.0

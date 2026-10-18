@@ -18,6 +18,7 @@ const BUNDLE_ORDER = [
     'extension/src/parser.js',
     'extension/src/metrics.js',
     'extension/src/ui.js',
+    'extension/src/related.js',
     'extension/src/content.js',
 ];
 
@@ -47,8 +48,19 @@ function baseManifest(target) {
         content_scripts: [
             {
                 matches: ['*://hh.ru/*', '*://*.hh.ru/*'],
+                js: ['network-hook.js'],
+                run_at: 'document_start',
+            },
+            {
+                matches: ['*://hh.ru/*', '*://*.hh.ru/*'],
                 js: ['content.js'],
                 run_at: 'document_idle',
+            },
+        ],
+        web_accessible_resources: [
+            {
+                resources: ['page-network-hook.js'],
+                matches: ['*://hh.ru/*', '*://*.hh.ru/*'],
             },
         ],
     };
@@ -93,6 +105,8 @@ for (const target of ['chromium', 'firefox']) {
     await mkdir(join(outDir, 'icons'), { recursive: true });
     await writeFile(join(outDir, 'manifest.json'), `${JSON.stringify(baseManifest(target), null, 2)}\n`);
     await writeFile(join(outDir, 'content.js'), bundle);
+    await copyFile(join(root, 'extension/src/network-hook.js'), join(outDir, 'network-hook.js'));
+    await copyFile(join(root, 'extension/page-network-hook.js'), join(outDir, 'page-network-hook.js'));
     for (const icon of ['icon16.png', 'icon48.png', 'icon128.png']) {
         await copyFile(join(root, 'extension/icons', icon), join(outDir, 'icons', icon));
     }

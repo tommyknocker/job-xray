@@ -203,12 +203,31 @@ function findViewersNode(root, pattern) {
     return null;
 }
 
-function searchCardInfoRoot(article) {
-    const cardInner = [...article.querySelectorAll('[id]')].find((node) => /^\d+$/.test(node.id));
-    if (cardInner?.firstElementChild) {
-        return cardInner.firstElementChild;
+function searchCardMountPoint(article) {
+    const title = article.querySelector('[data-qa="serp-item__title"]');
+    if (title) {
+        const afterTitle = title.closest('h2, h3, h4') || title.parentElement || title;
+        return { mode: 'after', ref: afterTitle };
     }
-    return article.querySelector('[class*="vacancy-info--"]');
+
+    const cardInner = [...article.querySelectorAll('[id]')].find((node) => /^\d+$/.test(node.id));
+    if (cardInner) {
+        return { mode: 'append', node: cardInner };
+    }
+
+    const response = article.querySelector(
+        '[data-qa="vacancy-serp__vacancy-response"], [data-qa="serp-item__response"], a[data-qa*="response"]',
+    );
+    if (response?.parentElement) {
+        return { mode: 'before', node: response.parentElement, ref: response };
+    }
+
+    const info = article.querySelector('[class*="vacancy-info--"]');
+    if (info) {
+        return { mode: 'append', node: info };
+    }
+
+    return { mode: 'append', node: article };
 }
 
 export function mountOnSearchCard(article, signals) {
@@ -217,18 +236,16 @@ export function mountOnSearchCard(article, signals) {
     }
 
     const badge = createBadge(signals, 'search');
-    const info = searchCardInfoRoot(article);
-    if (info) {
-        info.appendChild(badge);
+    const point = searchCardMountPoint(article);
+    if (point.mode === 'after' && point.ref) {
+        point.ref.insertAdjacentElement('afterend', badge);
         return;
     }
-
-    const title = article.querySelector('[data-qa="serp-item__title"]');
-    if (title?.parentElement) {
-        title.parentElement.insertAdjacentElement('beforebegin', badge);
+    if (point.mode === 'before' && point.ref) {
+        point.node.insertBefore(badge, point.ref);
         return;
     }
-    article.prepend(badge);
+    point.node.appendChild(badge);
 }
 
 function closestCard(node) {

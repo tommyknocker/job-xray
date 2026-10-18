@@ -1,0 +1,846 @@
+{
+  "resultsFound": 291,
+  "vacancies": [
+    {
+      "@workSchedule": "fullDay",
+      "@showContact": false,
+      "@responseLetterRequired": false,
+      "vacancyId": 138308159,
+      "name": "Архитектор внедрений",
+      "company": {
+        "@showSimilarVacancies": true,
+        "@trusted": true,
+        "@category": "COMPANY",
+        "@countryId": 1,
+        "@employerWithSpecificCountryLaws": false,
+        "@state": "APPROVED",
+        "id": 12084723,
+        "name": "ГигаЧат Бизнес",
+        "visibleName": "ГигаЧат Бизнес",
+        "companySiteUrl": "",
+        "accreditedITEmployer": false,
+        "employerOnAdditionalCheck": false,
+        "employerReviews": {
+          "totalRating": "5.0",
+          "reviewsCount": 9
+        }
+      },
+      "compensation": {
+        "noCompensation": {}
+      },
+      "publicationTime": {
+        "@timestamp": 1792325072,
+        "$": "2026-10-18T15:04:32.422+03:00"
+      },
+      "area": {
+        "@id": 1,
+        "name": "Москва",
+        "path": ".113.232.1."
+      },
+      "acceptTemporary": false,
+      "address": {
+        "@id": 30896111,
+        "@disabled": false,
+        "@wrong": false,
+        "metroStations": {
+          "@lat": 55.772315,
+          "@lng": 37.63285,
+          "metro": [
+            {
+              "@isAlias": false,
+              "@cityId": 1,
+              "@id": 175,
+              "@name": "metro.175",
+              "@order": 12,
+              "@translit": "sretenskiy_bulvar",
+              "id": 175,
+              "lat": 55.766106,
+              "line": {
+                "@id": 10,
+                "@name": "metroline.10",
+                "@translit": "lyublinsko_dmitrovskaya",
+                "@cityId": 1,
+                "id": 10,
+                "name": "Люблинско-Дмитровская",
+                "color": "#BED12C"
+              },
+              "lng": 37.635688,
+              "name": "Сретенский бульвар"
+            },
+            {
+              "@isAlias": false,
+              "@cityId": 1,
+              "@id": 137,
+              "@name": "metro.137",
+              "@order": 8,
+              "@translit": "sukharevskaya",
+              "id": 137,
+              "lat": 55.772315,
+              "line": {
+                "@id": 6,
+                "@name": "metroline.6",
+                "@translit": "kaluzhsko_rizhskaya",
+                "@cityId": 1,
+                "id": 6,
+                "name": "Калужско-Рижская",
+                "color": "#F07E24"
+              },
+              "lng": 37.63285,
+              "name": "Сухаревская"
+            },
+            {
+              "@isAlias": false,
+              "@cityId": 1,
+              "@id": 154,
+              "@name": "metro.154",
+              "@order": 9,
+              "@translit": "tsvetnoy_bulvar",
+              "id": 154,
+              "lat": 55.771653,
+              "line": {
+                "@id": 9,
+                "@name": "metroline.9",
+                "@translit": "serpukhovsko_timiryazevskaya",
+                "@cityId": 1,
+                "id": 9,
+                "name": "Серпуховско-Тимирязевская",
+                "color": "#ADACAC"
+              },
+              "lng": 37.620466,
+              "name": "Цветной бульвар"
+            }
+          ]
+        },
+        "city": "Москва",
+        "street": "Цветной бульвар",
+        "displayName": "Москва, Цветной бульвар",
+        "mapData": "{\"points\":{\"center\":{\"lng\":37.62553166292237,\"lat\":55.770464285998386,\"zoom\":15.440746500777601},\"marker\":{\"lng\":37.622217,\"lat\":55.770476}}}",
+        "marker": {
+          "@lat": 55.770476,
+          "@lng": 37.622217
+        },
+        "manager": {
+          "@id": 16932456
+        },
+        "districtDto": {
+          "id": 85,
+          "isMicroDistrict": false,
+          "name": "Мещанский"
+        }
+      },
+      "creationSite": "hh.ru",
+      "creationSiteId": 1,
+      "displayHost": "nn.hh.ru",
+      "lastChangeTime": {
+        "@timestamp": 1792327309,
+        "$": "2026-10-18T15:41:49.943+03:00"
+      },
+      "creationTime": "2026-10-09T15:04:32.422+03:00",
+      "canBeShared": true,
+      "employerManager": {
+        "latestActivity": "online"
+      },
+      "inboxPossibility": true,
+      "chatWritePossibility": "ENABLED_AFTER_INVITATION",
+      "notify": false,
+      "links": {
+        "desktop": "https://nn.hh.ru/vacancy/138308159",
+        "mobile": "https://m.hh.ru/vacancy/138308159"
+      },
+      "acceptIncompleteResumes": false,
+      "driverLicenseTypes": [
+        {}
+      ],
+      "languages": [
+        {}
+      ],
+      "workingDays": [
+        {}
+      ],
+      "workingTimeIntervals": [
+        {}
+      ],
+      "workingTimeModes": [
+        {}
+      ],
+      "vacancyProperties": {
+        "properties": [
+          {
+            "property": [
+              {
+                "id": 715708584,
+                "propertyType": "HH_STANDARD_PLUS",
+                "defining": true,
+                "classifying": true,
+                "bundle": "HH",
+                "propertyWeight": 600,
+                "parameters": [
+                  {
+                    "parameter": [
+                      {
+                        "key": "packageName",
+                        "value": "RENEWAL_VP"
+                      },
+                      {
+                        "key": "serviceId",
+                        "value": "68129902"
+                      }
+                    ]
+                  }
+                ],
+                "startTimeIso": "2026-10-09T15:04:32.422+03:00",
+                "endTimeIso": "2026-11-08T15:04:32.422+03:00"
+              },
+              {
+                "id": 715708581,
+                "propertyType": "HH_AI_ASSISTANT",
+                "bundle": "HH",
+                "propertyWeight": 600,
+                "parameters": [
+                  {
+                    "parameter": [
+                      {
+                        "key": "actualEndTime",
+                        "value": "2026-11-08T15:04:32.422"
+                      },
+                      {
+                        "key": "packageName",
+                        "value": "RENEWAL_VP"
+                      },
+                      {
+                        "key": "serviceId",
+                        "value": "68129902"
+                      }
+                    ]
+                  }
+                ],
+                "startTimeIso": "2026-10-09T15:04:32.422+03:00",
+                "endTimeIso": "2026-11-08T15:04:32.422+03:00"
+              },
+              {
+                "id": 715708582,
+                "propertyType": "HH_AUTO_RENEWAL",
+                "bundle": "HH",
+                "propertyWeight": 600,
+                "parameters": [
+                  {
+                    "parameter": [
+                      {
+                        "key": "intervalMinutes",
+                        "value": "4320"
+                      },
+                      {
+                        "key": "packageName",
+                        "value": "RENEWAL_VP"
+                      },
+                      {
+                        "key": "serviceId",
+                        "value": "68129902"
+                      },
+                      {
+                        "key": "nextActivationTimeIso",
+                        "value": "2026-10-21T15:04:32.422+03:00"
+                      }
+                    ]
+                  }
+                ],
+                "startTimeIso": "2026-10-09T15:04:32.422+03:00",
+                "endTimeIso": "2026-11-08T15:04:32.422+03:00"
+              },
+              {
+                "id": 715708583,
+                "propertyType": "HH_NEURO_CALL_SUMMARY",
+                "bundle": "HH",
+                "propertyWeight": 600,
+                "parameters": [
+                  {
+                    "parameter": [
+                      {
+                        "key": "actualEndTime",
+                        "value": "2026-11-08T15:04:32.422"
+                      },
+                      {
+                        "key": "packageName",
+                        "value": "RENEWAL_VP"
+                      },
+                      {
+                        "key": "serviceId",
+                        "value": "68129902"
+                      }
+                    ]
+                  }
+                ],
+                "startTimeIso": "2026-10-09T15:04:32.422+03:00",
+                "endTimeIso": "2026-11-08T15:04:32.422+03:00"
+              },
+              {
+                "id": 715708585,
+                "propertyType": "HH_NEURO_RESPONSE_ANALYZER",
+                "bundle": "HH",
+                "propertyWeight": 600,
+                "parameters": [
+                  {
+                    "parameter": [
+                      {
+                        "key": "actualEndTime",
+                        "value": "2026-11-08T15:04:32.422"
+                      },
+                      {
+                        "key": "packageName",
+                        "value": "RENEWAL_VP"
+                      },
+                      {
+                        "key": "serviceId",
+                        "value": "68129902"
+                      }
+                    ]
+                  }
+                ],
+                "startTimeIso": "2026-10-09T15:04:32.422+03:00",
+                "endTimeIso": "2026-11-08T15:04:32.422+03:00"
+              },
+              {
+                "id": 715708580,
+                "propertyType": "HH_NEURO_SURVEY",
+                "bundle": "HH",
+                "propertyWeight": 600,
+                "parameters": [
+                  {
+                    "parameter": [
+                      {
+                        "key": "actualEndTime",
+                        "value": "2026-11-08T15:04:32.422"
+                      },
+                      {
+                        "key": "packageName",
+                        "value": "RENEWAL_VP"
+                      },
+                      {
+                        "key": "serviceId",
+                        "value": "68129902"
+                      }
+                    ]
+                  }
+                ],
+                "startTimeIso": "2026-10-09T15:04:32.422+03:00",
+                "endTimeIso": "2026-11-08T15:04:32.422+03:00"
+              },
+              {
+                "id": 715708579,
+                "propertyType": "HH_SEARCH_RESULTS_NORMAL_POSITION",
+                "bundle": "HH",
+                "propertyWeight": 600,
+                "parameters": [
+                  {
+                    "parameter": [
+                      {
+                        "key": "packageName",
+                        "value": "RENEWAL_VP"
+                      },
+                      {
+                        "key": "serviceId",
+                        "value": "68129902"
+                      }
+                    ]
+                  }
+                ],
+                "startTimeIso": "2026-10-09T15:04:32.422+03:00",
+                "endTimeIso": "2026-11-08T15:04:32.422+03:00"
+              }
+            ]
+          }
+        ],
+        "calculatedStates": {
+          "HH": {
+            "advertising": false,
+            "anonymous": false,
+            "filteredPropertyNames": [
+              "HH_NEURO_RESPONSE_ANALYZER",
+              "HH_NEURO_CALL_SUMMARY",
+              "HH_SEARCH_RESULTS_NORMAL_POSITION",
+              "HH_STANDARD_PLUS",
+              "HH_AUTO_RENEWAL",
+              "HH_AI_ASSISTANT",
+              "HH_NEURO_SURVEY"
+            ],
+            "free": false,
+            "inPlatformCommunication": false,
+            "optimum": false,
+            "optionPremium": false,
+            "payForPerformance": false,
+            "premium": false,
+            "standard": false,
+            "standardPlus": true,
+            "translationKeys": [
+              "employer.VacancyCreate.PublicationType.STANDARD_PLUS"
+            ],
+            "virtualRecruiter": false,
+            "translation": "Стандарт плюс"
+          }
+        }
+      },
+      "vacancyPlatforms": [
+        "HH"
+      ],
+      "professionalRoleIds": [
+        {
+          "professionalRoleId": [
+            14
+          ]
+        }
+      ],
+      "workExperience": "moreThan6",
+      "employment": {
+        "@type": "FULL"
+      },
+      "closedForApplicants": false,
+      "userTestPresent": false,
+      "employmentForm": "FULL",
+      "flyInFlyOutDurations": [
+        {}
+      ],
+      "internship": false,
+      "nightShifts": false,
+      "workFormats": [
+        {
+          "workFormatsElement": [
+            "ON_SITE",
+            "HYBRID"
+          ]
+        }
+      ],
+      "workScheduleByDays": [
+        {
+          "workScheduleByDaysElement": [
+            "FIVE_ON_TWO_OFF"
+          ]
+        }
+      ],
+      "workingHours": [
+        {
+          "workingHoursElement": [
+            "HOURS_8"
+          ]
+        }
+      ],
+      "experimentalModes": [
+        {
+          "experimentalMode": [
+            "newContractFields",
+            "newEmploymentTerms",
+            "ageRestrictions",
+            "usingNewInclusivenessFields",
+            "newCompensationModes"
+          ]
+        }
+      ],
+      "acceptLaborContract": true,
+      "civilLawContracts": [
+        {}
+      ],
+      "autoResponse": {
+        "acceptAutoResponse": true
+      },
+      "inclusivenessTypes": [
+        {}
+      ],
+      "contactInfo": null,
+      "userLabels": [],
+      "snippet": {
+        "req": "Опыт внедрений в закрытых или изолированных контурах. Опыт работы с крупными корпоративными или государственными заказчиками. Опыт работы с российскими ОС...",
+        "resp": "Собирать и анализировать технические требования заказчиков к внедрению продукта. Прорабатывать архитектуру размещения продукта в инфраструктуре заказчика: on-premise, частное облако...",
+        "cond": "Достойная заработная плата + годовой бонус. Сильная команда. ДМС с первого месяца работы. Работа в аккредитованной IT компании. ",
+        "skill": null,
+        "desc": null
+      },
+      "responsesCount": 193,
+      "totalResponsesCount": 193,
+      "tags": [
+        {
+          "id": "vacancy-serp__vacancy-work-experience-moreThan6",
+          "text": "Опыт более 6 лет",
+          "icon": "BriefcaseOutlinedSize16"
+        }
+      ],
+      "labels": [],
+      "extraLabels": [],
+      "searchRid": "1792334280004ea775f0e3fbea2ae000",
+      "positionInRequest": 1
+    },
+    {
+      "@workSchedule": "remote",
+      "@showContact": false,
+      "@responseLetterRequired": true,
+      "vacancyId": 136119047,
+      "name": "Архитектор Optimacros",
+      "company": {
+        "@showSimilarVacancies": true,
+        "@trusted": true,
+        "@category": "COMPANY",
+        "@countryId": 1,
+        "@employerWithSpecificCountryLaws": false,
+        "@state": "APPROVED",
+        "id": 3169763,
+        "name": "Мэврика",
+        "visibleName": "Мэврика",
+        "logos": {
+          "logo": [
+            {
+              "@type": "ORIGINAL",
+              "@url": "/employer-logo-original-round/5779306.png"
+            },
+            {
+              "@type": "employerPage",
+              "@url": "/employer-logo-round/5779307.png"
+            },
+            {
+              "@type": "searchResultsPage",
+              "@url": "/employer-logo-round/5779308.png"
+            },
+            {
+              "@type": "small",
+              "@url": "/employer-logo-round/5779308.png"
+            },
+            {
+              "@type": "vacancyPage",
+              "@url": "/employer-logo-round/5779309.png"
+            },
+            {
+              "@type": "medium",
+              "@url": "/employer-logo-round/5779309.png"
+            }
+          ]
+        },
+        "employerOrganizationFormId": 0,
+        "badges": {
+          "badge": [
+            {
+              "type": "employer-it-accreditation",
+              "description": "Работодатель указал, что аккредитован как ИТ-компания",
+              "url": "https://feedback.hh.ru/knowledge-base/article/00038?search=a072cc087d3a0544c6f4ff80394005d5"
+            }
+          ]
+        },
+        "companySiteUrl": "https://www.mavericka.ru",
+        "accreditedITEmployer": true,
+        "employerOnAdditionalCheck": false,
+        "employerReviews": {
+          "totalRating": "4.9",
+          "reviewsCount": 6
+        }
+      },
+      "compensation": {
+        "from": 300000,
+        "to": 400000,
+        "currencyCode": "RUR",
+        "gross": true,
+        "perModeFrom": 300000,
+        "perModeTo": 400000,
+        "mode": "MONTH",
+        "frequency": "TWICE_PER_MONTH"
+      },
+      "publicationTime": {
+        "@timestamp": 1792243329,
+        "$": "2026-10-17T16:22:09.664+03:00"
+      },
+      "area": {
+        "@id": 1,
+        "name": "Москва",
+        "path": ".113.232.1."
+      },
+      "acceptTemporary": true,
+      "address": {
+        "@id": 10702430,
+        "@disabled": false,
+        "@wrong": false,
+        "metroStations": {
+          "@lat": 55.808056,
+          "@lng": 37.581734,
+          "metro": [
+            {
+              "@isAlias": false,
+              "@cityId": 1,
+              "@id": 35,
+              "@name": "metro.35",
+              "@order": 6,
+              "@translit": "dmitrovskaya",
+              "id": 35,
+              "lat": 55.808056,
+              "line": {
+                "@id": 9,
+                "@name": "metroline.9",
+                "@translit": "serpukhovsko_timiryazevskaya",
+                "@cityId": 1,
+                "id": 9,
+                "name": "Серпуховско-Тимирязевская",
+                "color": "#ADACAC"
+              },
+              "lng": 37.581734,
+              "name": "Дмитровская"
+            }
+          ]
+        },
+        "city": "Москва",
+        "street": "Большая Новодмитровская улица",
+        "building": "23",
+        "displayName": "Москва, Большая Новодмитровская улица, 23",
+        "mapData": "{\"points\":{\"center\":{\"lat\":55.80502611838856,\"lng\":37.58315999999998,\"zoom\":15},\"marker\":{\"lat\":55.801996,\"lng\":37.584586}}}",
+        "marker": {
+          "@lat": 55.801996,
+          "@lng": 37.584586
+        },
+        "manager": {
+          "@id": 3943505
+        },
+        "districtDto": {
+          "id": 288,
+          "isMicroDistrict": false,
+          "name": "Бутырский"
+        }
+      },
+      "creationSite": "hh.ru",
+      "creationSiteId": 1,
+      "displayHost": "nn.hh.ru",
+      "lastChangeTime": {
+        "@timestamp": 1792244431,
+        "$": "2026-10-17T16:40:31.869+03:00"
+      },
+      "creationTime": "2026-08-11T11:25:14.534+03:00",
+      "canBeShared": true,
+      "employerManager": {
+        "latestActivity": "offline"
+      },
+      "inboxPossibility": false,
+      "chatWritePossibility": "DISABLED",
+      "notify": true,
+      "links": {
+        "desktop": "https://nn.hh.ru/vacancy/136119047",
+        "mobile": "https://m.hh.ru/vacancy/136119047"
+      },
+      "acceptIncompleteResumes": false,
+      "driverLicenseTypes": [
+        {}
+      ],
+      "languages": [
+        {}
+      ],
+      "workingDays": [
+        {}
+      ],
+      "workingTimeIntervals": [
+        {}
+      ],
+      "workingTimeModes": [
+        {}
+      ],
+      "vacancyProperties": {
+        "properties": [
+          {
+            "property": [
+              {
+                "id": 709416728,
+                "propertyType": "HH_STANDARD_PLUS",
+                "defining": true,
+                "classifying": true,
+                "bundle": "HH",
+                "propertyWeight": 600,
+                "parameters": [
+                  {
+                    "parameter": [
+                      {
+                        "key": "packageName",
+                        "value": "RENEWAL_VP"
+                      },
+                      {
+                        "key": "serviceId",
+                        "value": "68473147"
+                      }
+                    ]
+                  }
+                ],
+                "startTimeIso": "2026-09-29T16:22:09.658+03:00",
+                "endTimeIso": "2026-10-29T16:22:09.658+03:00"
+              },
+              {
+                "id": 709416729,
+                "propertyType": "HH_AUTO_RENEWAL",
+                "bundle": "HH",
+                "propertyWeight": 600,
+                "parameters": [
+                  {
+                    "parameter": [
+                      {
+                        "key": "intervalMinutes",
+                        "value": "4320"
+                      },
+                      {
+                        "key": "packageName",
+                        "value": "RENEWAL_VP"
+                      },
+                      {
+                        "key": "serviceId",
+                        "value": "68473147"
+                      },
+                      {
+                        "key": "nextActivationTimeIso",
+                        "value": "2026-10-20T16:22:09.658+03:00"
+                      }
+                    ]
+                  }
+                ],
+                "startTimeIso": "2026-09-29T16:22:09.658+03:00",
+                "endTimeIso": "2026-10-29T16:22:09.658+03:00"
+              },
+              {
+                "id": 709416726,
+                "propertyType": "HH_SEARCH_RESULTS_NORMAL_POSITION",
+                "bundle": "HH",
+                "propertyWeight": 600,
+                "parameters": [
+                  {
+                    "parameter": [
+                      {
+                        "key": "packageName",
+                        "value": "RENEWAL_VP"
+                      },
+                      {
+                        "key": "serviceId",
+                        "value": "68473147"
+                      }
+                    ]
+                  }
+                ],
+                "startTimeIso": "2026-09-29T16:22:09.658+03:00",
+                "endTimeIso": "2026-10-29T16:22:09.658+03:00"
+              }
+            ]
+          }
+        ],
+        "calculatedStates": {
+          "HH": {
+            "advertising": false,
+            "anonymous": false,
+            "filteredPropertyNames": [
+              "HH_AUTO_RENEWAL",
+              "HH_SEARCH_RESULTS_NORMAL_POSITION",
+              "HH_STANDARD_PLUS"
+            ],
+            "free": false,
+            "inPlatformCommunication": false,
+            "optimum": false,
+            "optionPremium": false,
+            "payForPerformance": false,
+            "premium": false,
+            "standard": false,
+            "standardPlus": true,
+            "translationKeys": [
+              "employer.VacancyCreate.PublicationType.STANDARD_PLUS"
+            ],
+            "virtualRecruiter": false,
+            "translation": "Стандарт плюс"
+          }
+        }
+      },
+      "vacancyPlatforms": [
+        "HH"
+      ],
+      "professionalRoleIds": [
+        {
+          "professionalRoleId": [
+            150
+          ]
+        }
+      ],
+      "workExperience": "between3And6",
+      "employment": {
+        "@type": "FULL"
+      },
+      "closedForApplicants": false,
+      "userTestPresent": false,
+      "employmentForm": "FULL",
+      "flyInFlyOutDurations": [
+        {}
+      ],
+      "internship": false,
+      "nightShifts": false,
+      "workFormats": [
+        {
+          "workFormatsElement": [
+            "REMOTE",
+            "HYBRID"
+          ]
+        }
+      ],
+      "workScheduleByDays": [
+        {
+          "workScheduleByDaysElement": [
+            "FIVE_ON_TWO_OFF"
+          ]
+        }
+      ],
+      "workingHours": [
+        {
+          "workingHoursElement": [
+            "HOURS_8"
+          ]
+        }
+      ],
+      "experimentalModes": [
+        {
+          "experimentalMode": [
+            "newContractFields",
+            "flyInFlyOutModalSwitch",
+            "newEmploymentTerms",
+            "ageRestrictions",
+            "usingNewInclusivenessFields",
+            "newCompensationModes"
+          ]
+        }
+      ],
+      "acceptLaborContract": true,
+      "civilLawContracts": [
+        {
+          "civilLawContractsElement": [
+            "INDIVIDUAL_ENTREPRENEUR"
+          ]
+        }
+      ],
+      "autoResponse": {
+        "acceptAutoResponse": false
+      },
+      "inclusivenessTypes": [
+        {}
+      ],
+      "contactInfo": null,
+      "userLabels": [],
+      "snippet": {
+        "req": "Наставничество команды, обмен опытом. Ожидания по опыту и навыкам успешного кандидата: Высшее образование. Опыт работы с Optimacros более 3 лет...",
+        "resp": "Управление ожиданиями заказчика, работа с требованиями. - Описание бизнес-процессов, проектирование моделей. - Активная разработка комплексных моделей на Optimacros. - Решение сложных технических...",
+        "cond": "Преимущества и возможности работы в нашей команде: ДМС после 6 месяцев работы.",
+        "skill": null,
+        "desc": null
+      },
+      "responsesCount": 132,
+      "totalResponsesCount": 253,
+      "tags": [
+        {
+          "id": "vacancy-serp__vacancy-work-experience-between3And6",
+          "text": "Опыт 3-6 лет",
+          "icon": "BriefcaseOutlinedSize16"
+        },
+        {
+          "id": "vacancy-label-work-schedule-remote",
+          "text": "Можно удалённо"
+        },
+        {
+          "id": "vacancy-serp__vacancy-compensation-frequency-TWICE_PER_MONTH",
+          "text": "Выплаты: Два раза в месяц"
+        }
+      ],
+      "labels": [],
+      "extraLabels": [],
+      "searchRid": "1792334280004ea775f0e3fbea2ae000",
+      "positionInRequest": 2
+    }
+  ]
+}
