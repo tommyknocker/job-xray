@@ -1,6 +1,5 @@
 import {
     detectPage,
-    extractSearchVacancies,
     extractVacancy,
     readInitialStateFromDocument,
 } from './parser.js';
@@ -12,12 +11,22 @@ import {
     registerRelatedVacanciesListener,
     resetRelatedVacancyCache,
 } from './related.js';
+import {
+    maybeResolveSearchPageData,
+    registerSearchShardListener,
+    resetSearchShardCache,
+    searchSignalsById,
+    serpDomSignature,
+} from './searchShard.js';
 import { mountOnSearchCard, mountOnVacancyPage, vacancyIdFromCard } from './ui.js';
 
-const SCAN_INTERVAL_MS = 800;
+const STATE_ID = 'HH-Lux-InitialState';
+
+const SCAN_INTERVAL_MS = 2000;
 
 let lastHref = '';
 let lastSignature = '';
+let lastSerpDomSignature = '';
 let scanTimer = 0;
 let hookedHistory = false;
 
@@ -36,12 +45,8 @@ function stateSignature(state) {
     return `vacancy:${vacancyId}`;
 }
 
-function mountSearch(state) {
-    const byId = new Map(
-        extractSearchVacancies(state)
-            .map((item) => computeSignals(item))
-            .map((item) => [item.id, item]),
-    );
+function applySearchBadges(state) {
+    const byId = searchSignalsById(state);
 
     document.querySelectorAll('article[data-qa="vacancy-serp__vacancy"]').forEach((article) => {
         const id = vacancyIdFromCard(article);
@@ -77,6 +82,8 @@ function scan(force = false) {
     if (hrefChanged) {
         document.querySelectorAll('[data-job-xray-surface="vacancy"]').forEach((node) => node.remove());
         resetRelatedVacancyCache();
+        resetSearchShardCache();
+        lastSerpDomSignature = '';
     }
 
     const state = readInitialStateFromDocument();
@@ -90,7 +97,15 @@ function scan(force = false) {
     }
 
     if (page === 'search') {
-        mountSearch(state);
+        const domSignature = serpDomSignature();
+        if (domSignature !== lastSerpDomSignature) {
+            lastSerpDomSignature = domSignature;
+            resetSearchShardCache();
+        }
+        applySearchBadges(state);
+        maybeResolveSearchPageData(state, () => {
+            applySearchBadges(readInitialStateFromDocument() ?? state);
+        });
         return;
     }
     if (page === 'vacancy') {
@@ -103,6 +118,16 @@ function scan(force = false) {
     }
 }
 
+function mutationFromJobXray(mutations) {
+    for (const mutation of mutations) {
+        const target = mutation.target;
+        if (target instanceof Element && target.closest('[data-job-xray]')) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function requestScan() {
     if (scanTimer) {
         return;
@@ -110,7 +135,7 @@ function requestScan() {
     scanTimer = window.setTimeout(() => {
         scanTimer = 0;
         scan();
-    }, 100);
+    }, 150);
 }
 
 function hookHistory() {
@@ -131,17 +156,50 @@ function hookHistory() {
     window.addEventListener('popstate', requestScan);
 }
 
+function observeInitialState() {
+    const attach = (el) => {
+        if (!el || el.dataset.jobXrayStateObserved) {
+            return;
+        }
+        el.dataset.jobXrayStateObserved = '1';
+        new MutationObserver((mutations) => {
+            if (!mutationFromJobXray(mutations)) {
+                requestScan();
+            }
+        }).observe(el, { childList: true, characterData: true, subtree: true });
+    };
+
+    attach(document.getElementById(STATE_ID));
+    new MutationObserver(() => {
+        attach(document.getElementById(STATE_ID));
+    }).observe(document.documentElement, { childList: true, subtree: true });
+}
+
 function observe() {
-    const observer = new MutationObserver(() => {
+    const observer = new MutationObserver((mutations) => {
+        if (mutationFromJobXray(mutations)) {
+            return;
+        }
         requestScan();
     });
     observer.observe(document.documentElement, { childList: true, subtree: true });
+    observeInitialState();
     setInterval(() => scan(), SCAN_INTERVAL_MS);
 }
 
 registerRelatedVacanciesListener(() => {
     const state = readInitialStateFromDocument();
     mountRelatedVacancyCards(currentVacancyIdForPage(state));
+});
+
+registerSearchShardListener(() => {
+    if (detectPage(location.pathname) !== 'search') {
+        return;
+    }
+    const state = readInitialStateFromDocument();
+    if (state) {
+        applySearchBadges(state);
+    }
 });
 
 hookHistory();

@@ -19,6 +19,7 @@ const BUNDLE_ORDER = [
     'extension/src/metrics.js',
     'extension/src/ui.js',
     'extension/src/related.js',
+    'extension/src/searchShard.js',
     'extension/src/content.js',
 ];
 

@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { extractInitialStateFromHtml, extractRelatedVacanciesShard, extractSearchVacancies, extractVacancy, extractVacancyPage, normalizeSearchVacancy, normalizeResponseTotals, vacancyIdFromPath } from '../extension/src/parser.js';
+import { extractInitialStateFromHtml, extractRelatedVacanciesShard, extractSearchVacancies, extractSearchVacanciesShard, extractVacancy, extractVacancyPage, normalizeSearchVacancy, normalizeResponseTotals, vacancyIdFromPath } from '../extension/src/parser.js';
 import { ingestRelatedVacanciesPayload, relatedVacancyCacheSize, resetRelatedVacancyCache } from '../extension/src/related.js';
+import { ingestSearchVacanciesHtml, ingestSearchVacanciesShard, resetSearchShardCache, searchShardCacheSize } from '../extension/src/searchShard.js';
 import { computeSignals, formatAge, formatPerDay, toneOf } from '../extension/src/metrics.js';
 import { chipsFor } from '../extension/src/ui.js';
 
@@ -145,5 +146,18 @@ ingestRelatedVacanciesPayload({ vacancies: [relatedShard.vacancies[0]] });
 assert.equal(relatedVacancyCacheSize(), 1);
 ingestRelatedVacanciesPayload({ vacancies: [relatedShard.vacancies[1]] });
 assert.equal(relatedVacancyCacheSize(), 2);
+
+const searchShard = JSON.parse(readFileSync(join(root, 'tests/fixtures/search-dual-counters.json'), 'utf8'));
+const shardItems = extractSearchVacanciesShard(searchShard);
+assert.equal(shardItems.length, 1);
+assert.equal(shardItems[0].id, '136655566');
+resetSearchShardCache();
+ingestSearchVacanciesShard(searchShard);
+assert.equal(searchShardCacheSize(), 1);
+
+const searchHtml = readFileSync(join(root, 'data', 'search_php.html'), 'utf8');
+resetSearchShardCache();
+assert.ok(ingestSearchVacanciesHtml(searchHtml));
+assert.equal(searchShardCacheSize(), 50);
 
 console.log(`ok: ${search.length} search vacancies, vacancy pages parsed`);

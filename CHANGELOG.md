@@ -4,6 +4,13 @@ All notable changes to **job-xray** are documented here. The format follows [Kee
 
 Version numbers match `package.json`, extension manifests, and Git tags (`v*`). Website copy lives in [job-xray-site](https://github.com/tommyknocker/job-xray-site) (`data/changelog.php`).
 
+## [0.1.4] - 2026-10-18
+
+### Fixed
+
+- Search **page 2+** (SPA pagination): hh often keeps the same URL and stale `#HH-Lux-InitialState`; badges now load from `/search/vacancy?page=N` HTML (XHR hook + content-script fetch), using the active pager link (`aria-current="true"`).
+- Stop resolve/fetch loops that could freeze or crash the tab after pagination (ignore stale InitialState once shard data is applied; skip observer feedback from our own badges).
+
 ## [0.1.3] - 2026-10-18
 
 ### Added
@@ -50,6 +57,7 @@ Version numbers match `package.json`, extension manifests, and Git tags (`v*`). 
 - Chromium and Firefox release packages via GitHub Actions (`job-xray-chromium.zip`, `job-xray-firefox.xpi`).
 - Local-only processing: reads `#HH-Lux-InitialState` on open hh.ru pages; no backend or telemetry.
 
+[0.1.4]: https://github.com/tommyknocker/job-xray/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/tommyknocker/job-xray/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/tommyknocker/job-xray/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/tommyknocker/job-xray/compare/v0.1.0...v0.1.1

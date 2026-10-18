@@ -1,23 +1,62 @@
 /**
- * Runs in the page (main) world. Posts related_vacancies JSON to the extension via postMessage.
+ * Runs in the page (main) world. Posts shard JSON / SERP HTML to the extension via postMessage.
  */
 (function jobXrayPageNetworkHook() {
-    const RELATED = /\/shards\/vacancy\/related_vacancies(?:\?|$|\/)/;
-    const MESSAGE_TYPE = 'job-xray:related-vacancies';
+    const ROUTES = [
+        {
+            re: /\/shards\/vacancy\/related_vacancies(?:\?|$|\/)/,
+            type: 'job-xray:related-vacancies',
+            valid: (payload) => Array.isArray(payload?.vacancies),
+        },
+        {
+            re: /\/shards\/vacancy\/search(?:\?|$|\/)/,
+            type: 'job-xray:search-vacancies',
+            valid: (payload) => Array.isArray(payload?.vacancySearchResult?.vacancies),
+        },
+    ];
 
-    function emit(payload) {
-        if (!payload || !Array.isArray(payload.vacancies)) {
+    function isSearchPaginationHtml(url) {
+        const raw = String(url);
+        if (!/\/search\/vacancy/.test(raw) || !/[?&]page=\d+/.test(raw)) {
+            return false;
+        }
+        try {
+            const { pathname } = new URL(raw, location.origin);
+            return pathname === '/search/vacancy' || pathname.endsWith('/search/vacancy');
+        } catch {
+            return true;
+        }
+    }
+
+    function routeForUrl(url) {
+        return ROUTES.find((route) => route.re.test(String(url)));
+    }
+
+    function emit(route, payload) {
+        if (!route?.valid(payload)) {
             return;
         }
-        window.postMessage({ type: MESSAGE_TYPE, payload }, '*');
+        window.postMessage({ type: route.type, payload }, '*');
     }
 
     function maybeEmit(url, text) {
-        if (!RELATED.test(String(url)) || !text) {
+        if (!text) {
+            return;
+        }
+        const rawUrl = String(url);
+        if (isSearchPaginationHtml(rawUrl)) {
+            window.postMessage({
+                type: 'job-xray:search-page-html',
+                payload: { url: rawUrl, html: text },
+            }, '*');
+            return;
+        }
+        const route = routeForUrl(rawUrl);
+        if (!route) {
             return;
         }
         try {
-            emit(JSON.parse(text));
+            emit(route, JSON.parse(text));
         } catch {
             // ignore
         }
@@ -27,8 +66,10 @@
         const nativeFetch = window.fetch.bind(window);
         window.fetch = function hookedFetch(input, init) {
             const url = typeof input === 'string' ? input : input?.url;
+            const route = routeForUrl(url);
+            const trackHtml = isSearchPaginationHtml(url);
             return nativeFetch(input, init).then((response) => {
-                if (url && RELATED.test(url)) {
+                if (route || trackHtml) {
                     const clone = response.clone();
                     clone.text().then((text) => maybeEmit(url, text)).catch(() => {});
                 }

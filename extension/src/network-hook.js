@@ -1,16 +1,23 @@
 /**
- * Content script at document_start: inject page-world hook + relay postMessage to job-xray-related.
+ * Content script at document_start: inject page-world hook + relay postMessage to CustomEvents.
  */
 (function jobXrayNetworkHookRelay() {
-    const EVENT = 'job-xray-related';
-    const MESSAGE_TYPE = 'job-xray:related-vacancies';
     const PAGE_HOOK = 'page-network-hook.js';
+    const RELAY = [
+        { message: 'job-xray:related-vacancies', event: 'job-xray-related' },
+        { message: 'job-xray:search-vacancies', event: 'job-xray-search' },
+        { message: 'job-xray:search-page-html', event: 'job-xray-search-page-html' },
+    ];
 
     window.addEventListener('message', (event) => {
-        if (event.source !== window || event.data?.type !== MESSAGE_TYPE) {
+        if (event.source !== window) {
             return;
         }
-        window.dispatchEvent(new CustomEvent(EVENT, { detail: event.data.payload }));
+        const route = RELAY.find((item) => item.message === event.data?.type);
+        if (!route) {
+            return;
+        }
+        window.dispatchEvent(new CustomEvent(route.event, { detail: event.data.payload }));
     });
 
     function injectPageHook() {

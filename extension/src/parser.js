@@ -211,6 +211,16 @@ export function extractSearchVacancies(state) {
     return list.map(normalizeSearchVacancy).filter((item) => item.id);
 }
 
+/** `/shards/vacancy/search` — SPA pagination on vacancy search. */
+export function extractSearchVacanciesShard(payload) {
+    const list = payload?.vacancySearchResult?.vacancies ?? payload?.vacancies;
+    if (!Array.isArray(list)) {
+        return [];
+    }
+
+    return list.map(normalizeSearchVacancy).filter((item) => item.id);
+}
+
 /** `/shards/vacancy/related_vacancies` — «Вам подойдут эти вакансии» on vacancy page. */
 export function extractRelatedVacanciesShard(payload) {
     if (!Array.isArray(payload?.vacancies)) {
