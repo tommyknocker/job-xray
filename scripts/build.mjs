@@ -9,7 +9,9 @@ const distRoot = join(root, 'dist');
 const pkg = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'));
 
 const FIREFOX_ID = 'job-xray@tommyknocker';
-const FIREFOX_MIN = '115.0';
+/** `data_collection_permissions` is supported from Firefox 140 / Fenix 142. */
+const FIREFOX_MIN = '140.0';
+const FIREFOX_ANDROID_MIN = '142.0';
 
 const BUNDLE_ORDER = [
     'extension/src/copy.ru.js',
@@ -59,6 +61,9 @@ function baseManifest(target) {
                 data_collection_permissions: {
                     required: ['none'],
                 },
+            },
+            gecko_android: {
+                strict_min_version: FIREFOX_ANDROID_MIN,
             },
         };
     }
