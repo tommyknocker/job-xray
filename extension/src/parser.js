@@ -1,4 +1,4 @@
-const STATE_ID = 'HH-Lux-InitialState';
+export const STATE_ID = 'HH-Lux-InitialState';
 
 function unescapeHtml(raw) {
     return raw

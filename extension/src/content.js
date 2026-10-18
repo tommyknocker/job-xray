@@ -1,4 +1,5 @@
 import {
+    STATE_ID,
     detectPage,
     extractVacancy,
     readInitialStateFromDocument,
@@ -19,8 +20,6 @@ import {
     serpDomSignature,
 } from './searchShard.js';
 import { mountOnSearchCard, mountOnVacancyPage, vacancyIdFromCard } from './ui.js';
-
-const STATE_ID = 'HH-Lux-InitialState';
 
 const SCAN_INTERVAL_MS = 2000;
 

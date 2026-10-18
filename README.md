@@ -54,13 +54,15 @@ Load unpacked from `dist/<engine>/`, or install the zip/xpi.
 
 Firefox: `about:debugging` → **This Firefox** → **Load Temporary Add-on** → `dist/firefox/manifest.json`.
 
-## Parser tests
+## Tests and Firefox bundle check
 
-Requires a local `data/` folder with saved HTML snapshots (not in git).
+Parser tests need a local `data/` folder with saved HTML snapshots (not in git).
 
 ```bash
 npm test
 ```
+
+`npm test` also runs `npm run check`: it simulates the Firefox concatenated `content.js` (classic script, no `import`) and fails on duplicate top-level names or syntax errors — the same class of issues AMO reports. `npm run build` runs the same check before writing `dist/`.
 
 ## GitHub releases
 
