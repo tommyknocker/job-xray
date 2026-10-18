@@ -1,0 +1,23 @@
+{
+  "recommendedVacancies": {
+    "resultsFound": 345,
+    "vacancies": [
+      {
+        "vacancyId": 137961989,
+        "name": "Senior PHP Backend Developer (Symfony)",
+        "totalResponsesCount": 467,
+        "responsesCount": 448,
+        "creationTime": "2026-09-30T13:35:07.498+03:00",
+        "publicationTime": "2026-10-18T13:35:07.498+03:00"
+      },
+      {
+        "vacancyId": 138569363,
+        "name": "PHP Developer (Symfony/Slim)",
+        "totalResponsesCount": 138,
+        "responsesCount": 12,
+        "creationTime": "2026-10-16T20:03:31.685+03:00",
+        "publicationTime": "2026-10-16T20:03:31.685+03:00"
+      }
+    ]
+  }
+}

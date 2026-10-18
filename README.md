@@ -11,7 +11,7 @@
 
 Browser extension that surfaces hidden response counters on hh.ru.
 
-On search results and vacancy pages it reads `#HH-Lux-InitialState` and renders badges: total responses, unread queue (search only), responses per day, age from creation date, and a “bumped” flag when publication is newer than creation. Badge labels are Russian (`extension/src/copy.ru.js`); repo docs and source comments are English.
+On the homepage, search results, and vacancy pages it reads `#HH-Lux-InitialState` and renders badges: total responses, unread queue (search and homepage), responses per day, age from creation date, and a “bumped” flag when publication is newer than creation. Badge labels are Russian (`extension/src/copy.ru.js`); repo docs and source comments are English.
 
 ## Download
 
@@ -68,6 +68,6 @@ Before you push (or automatically via `git push` after `npm ci`), run **`npm run
 
 ## GitHub releases
 
-Tag `v0.1.4` (must match `package.json` version) and push. CI builds the packages and attaches them to the GitHub Release under the stable names above.
+Tag `v0.1.5` (must match `package.json` version) and push. CI builds the packages and attaches them to the GitHub Release under the stable names above.
 
 After tagging, add the same release notes to [job-xray-site](https://github.com/tommyknocker/job-xray-site) (`data/changelog.php`, `config/site.php`). See [CHANGELOG.md](CHANGELOG.md).

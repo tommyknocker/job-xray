@@ -176,6 +176,12 @@ export function createBadge(signals, variant = 'search') {
     return host;
 }
 
+export const SERP_CARD_SELECTOR = '[data-qa="vacancy-serp__vacancy"]';
+
+export function closestSerpCard(node) {
+    return node?.closest?.(SERP_CARD_SELECTOR) ?? null;
+}
+
 export function vacancyIdFromCard(article) {
     const title = article.querySelector('[data-qa="serp-item__title"]');
     const href = title?.getAttribute('href') || title?.href || '';

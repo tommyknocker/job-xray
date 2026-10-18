@@ -4,7 +4,7 @@ import {
     extractSearchVacanciesShard,
 } from './parser.js';
 import { computeSignals } from './metrics.js';
-import { vacancyIdFromCard } from './ui.js';
+import { SERP_CARD_SELECTOR, vacancyIdFromCard } from './ui.js';
 
 const shardById = new Map();
 let searchShardListenerRegistered = false;
@@ -57,7 +57,7 @@ export function searchSignalsById(state) {
 }
 
 export function serpDomSignature() {
-    const ids = [...document.querySelectorAll('article[data-qa="vacancy-serp__vacancy"]')]
+    const ids = [...document.querySelectorAll(SERP_CARD_SELECTOR)]
         .slice(0, 3)
         .map((article) => vacancyIdFromCard(article))
         .filter(Boolean);
@@ -65,13 +65,13 @@ export function serpDomSignature() {
 }
 
 export function countUnbadgedSerpCards() {
-    return [...document.querySelectorAll('article[data-qa="vacancy-serp__vacancy"]')]
+    return [...document.querySelectorAll(SERP_CARD_SELECTOR)]
         .filter((article) => !article.querySelector('[data-job-xray]')).length;
 }
 
 export function serpDomStateMismatch(state) {
     const domFirst = vacancyIdFromCard(
-        document.querySelector('article[data-qa="vacancy-serp__vacancy"]'),
+        document.querySelector(SERP_CARD_SELECTOR),
     );
     const stateFirst = extractSearchVacancies(state)[0]?.id;
     return Boolean(domFirst && stateFirst && domFirst !== stateFirst);

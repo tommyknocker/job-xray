@@ -202,13 +202,18 @@ export function normalizeSearchVacancy(raw) {
     };
 }
 
-export function extractSearchVacancies(state) {
-    const list = state?.vacancySearchResult?.vacancies;
-    if (!Array.isArray(list)) {
-        return [];
+function vacancyListFromState(state) {
+    if (Array.isArray(state?.vacancySearchResult?.vacancies)) {
+        return state.vacancySearchResult.vacancies;
     }
+    if (Array.isArray(state?.recommendedVacancies?.vacancies)) {
+        return state.recommendedVacancies.vacancies;
+    }
+    return [];
+}
 
-    return list.map(normalizeSearchVacancy).filter((item) => item.id);
+export function extractSearchVacancies(state) {
+    return vacancyListFromState(state).map(normalizeSearchVacancy).filter((item) => item.id);
 }
 
 /** `/shards/vacancy/search` — SPA pagination on vacancy search. */
@@ -294,6 +299,9 @@ export function detectPage(pathname) {
     }
     if (vacancyIdFromPath(pathname)) {
         return 'vacancy';
+    }
+    if (pathname === '/' || pathname === '') {
+        return 'home';
     }
     return null;
 }

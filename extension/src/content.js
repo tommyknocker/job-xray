@@ -19,7 +19,7 @@ import {
     searchSignalsById,
     serpDomSignature,
 } from './searchShard.js';
-import { mountOnSearchCard, mountOnVacancyPage, vacancyIdFromCard } from './ui.js';
+import { mountOnSearchCard, mountOnVacancyPage, SERP_CARD_SELECTOR, vacancyIdFromCard } from './ui.js';
 
 const SCAN_INTERVAL_MS = 2000;
 
@@ -33,10 +33,13 @@ function stateSignature(state) {
     if (!state) {
         return 'empty';
     }
-    const search = state.vacancySearchResult;
+    const search = state.vacancySearchResult?.vacancies
+        ? state.vacancySearchResult
+        : state.recommendedVacancies;
     if (search?.vacancies) {
         const first = search.vacancies[0]?.vacancyId ?? '';
-        return `search:${search.totalResults}:${search.vacancies.length}:${first}`;
+        const kind = state.vacancySearchResult?.vacancies ? 'search' : 'home';
+        return `${kind}:${search.totalResults ?? search.resultsFound ?? ''}:${search.vacancies.length}:${first}`;
     }
     const vacancyId = state.analyticsParams?.vacancyId
         ?? state.vacancyView?.vacancyFull?.vacancy?.vacancyId
@@ -47,7 +50,7 @@ function stateSignature(state) {
 function applySearchBadges(state) {
     const byId = searchSignalsById(state);
 
-    document.querySelectorAll('article[data-qa="vacancy-serp__vacancy"]').forEach((article) => {
+    document.querySelectorAll(SERP_CARD_SELECTOR).forEach((article) => {
         const id = vacancyIdFromCard(article);
         if (!id) {
             return;
@@ -95,16 +98,20 @@ function scan(force = false) {
         return;
     }
 
-    if (page === 'search') {
-        const domSignature = serpDomSignature();
-        if (domSignature !== lastSerpDomSignature) {
-            lastSerpDomSignature = domSignature;
-            resetSearchShardCache();
+    if (page === 'search' || page === 'home') {
+        if (page === 'search') {
+            const domSignature = serpDomSignature();
+            if (domSignature !== lastSerpDomSignature) {
+                lastSerpDomSignature = domSignature;
+                resetSearchShardCache();
+            }
         }
         applySearchBadges(state);
-        maybeResolveSearchPageData(state, () => {
-            applySearchBadges(readInitialStateFromDocument() ?? state);
-        });
+        if (page === 'search') {
+            maybeResolveSearchPageData(state, () => {
+                applySearchBadges(readInitialStateFromDocument() ?? state);
+            });
+        }
         return;
     }
     if (page === 'vacancy') {
@@ -192,7 +199,8 @@ registerRelatedVacanciesListener(() => {
 });
 
 registerSearchShardListener(() => {
-    if (detectPage(location.pathname) !== 'search') {
+    const page = detectPage(location.pathname);
+    if (page !== 'search' && page !== 'home') {
         return;
     }
     const state = readInitialStateFromDocument();

@@ -1,6 +1,6 @@
 import { extractRelatedVacanciesShard, vacancyIdFromPath } from './parser.js';
 import { computeSignals } from './metrics.js';
-import { mountOnSearchCard, vacancyIdFromCard } from './ui.js';
+import { closestSerpCard, mountOnSearchCard, SERP_CARD_SELECTOR, vacancyIdFromCard } from './ui.js';
 
 /** Merged across every related_vacancies?page=N response on the same vacancy page. */
 const relatedById = new Map();
@@ -57,7 +57,7 @@ function isInRelatedBlock(node) {
 
 function articleForVacancyId(id) {
     for (const link of document.querySelectorAll(`a[href*="/vacancy/${id}"]`)) {
-        const article = link.closest('article[data-qa="vacancy-serp__vacancy"]')
+        const article = closestSerpCard(link)
             || link.closest('article')
             || link.closest('[class*="vacancy"]');
         if (article && isInRelatedBlock(article)) {
@@ -157,7 +157,7 @@ export function mountRelatedVacancyCards(excludeVacancyId = '') {
         mountOnSearchCard(article, signals);
     }
 
-    document.querySelectorAll('article[data-qa="vacancy-serp__vacancy"]').forEach((article) => {
+    document.querySelectorAll(SERP_CARD_SELECTOR).forEach((article) => {
         if (!isInRelatedBlock(article)) {
             return;
         }
