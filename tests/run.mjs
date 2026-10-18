@@ -114,4 +114,19 @@ assert.equal(pikPage.total, 861);
 assert.equal(pikPage.totalAlt, 1750);
 assert.ok(pikPage.countersUnstable);
 
+const freshState = extractInitialStateFromHtml(
+    readFileSync(join(root, 'tests/fixtures/vacancy-138579321.html'), 'utf8'),
+);
+assert.ok(freshState, 'vacancy-138579321.html');
+const freshSignals = computeSignals(
+    extractVacancyPage(freshState),
+    new Date('2026-10-18T15:10:00+03:00'),
+);
+assert.equal(freshSignals.total, 103);
+assert.ok(freshSignals.perHour != null && freshSignals.perHour < 200);
+assert.equal(freshSignals.perDay, null);
+const freshRateChips = chipsFor(freshSignals, 'vacancy').map((chip) => chip.text);
+assert.ok(freshRateChips.some((text) => text.includes('/час')));
+assert.ok(!freshRateChips.some((text) => text.includes('/день')));
+
 console.log(`ok: ${search.length} search vacancies, vacancy pages parsed`);

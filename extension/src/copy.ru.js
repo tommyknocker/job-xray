@@ -24,7 +24,29 @@ export const TOOLTIP = {
     responses: (n) => `откликов: ${n}`,
     unread: (n) => `неразобранных: ${n}`,
     perDay: (n) => `${n.toFixed(1)} в день`,
+    perHour: (n) => `${n.toFixed(1)} в час`,
 };
+
+/** Shown on the “?” next to the job-xray caption (vacancy page). */
+export const LEGEND_HELP = `Данные из JSON hh.ru на этой странице. Расширение никуда не отправляет.
+
+Отклики — сколько всего откликов (цифра hh). Цвет: зелёный спокойнее, жёлтый средне, красный горячо, серый «зомби» (давно висит, неразобранных 0).
+
+Неразобр. — неразобранные отклики у работодателя (только в выдаче, если hh отдал поле).
+
+Сегодня / N д — сколько дней с даты создания вакансии, не с последнего «поднятия».
+
+N/час — средний темп за время с публикации, если вакансии меньше суток (не экстраполяция на целый день).
+
+N/день — средний темп откликов в день с даты создания (если вакансия старше суток).
+
+Подняли — дата публикации заметно новее даты создания (вакансию поднимали в ленте).
+
+Стандарт, Стандарт плюс, Оптимум, Премиум — тариф размещения у работодателя.
+
+Буст — платное продвижение в выдаче. AI-разбор, тест, письмо — требования/опции отклика.
+
+~ и «по другому счётчику» — hh показывает два разных счётчика откликов; основной с ~.`;
 
 /** Tooltip lines are per surface (search vs vacancy); hh uses different counters in each payload. */
 export function badgeTooltipParts(signals, variant) {
@@ -48,7 +70,9 @@ export function badgeTooltipParts(signals, variant) {
     if (signals.unread != null) {
         parts.push(TOOLTIP.unread(signals.unread));
     }
-    if (signals.perDay != null) {
+    if (signals.perHour != null) {
+        parts.push(TOOLTIP.perHour(signals.perHour));
+    } else if (signals.perDay != null) {
         parts.push(TOOLTIP.perDay(signals.perDay));
     }
     return parts;

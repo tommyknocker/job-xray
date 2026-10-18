@@ -1,5 +1,5 @@
-import { CHIP, badgeTooltipParts } from './copy.ru.js';
-import { formatAge, formatCount, formatPerDay } from './metrics.js';
+import { CHIP, LEGEND_HELP, badgeTooltipParts } from './copy.ru.js';
+import { formatAge, formatCount, formatDisplayRate } from './metrics.js';
 
 const STYLES = `
 :host {
@@ -35,14 +35,40 @@ const STYLES = `
   background: #f8fafc;
   border: 1px solid #e4e7ec;
 }
-.caption {
+.caption-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin: 0 0 6px;
+}
+.caption {
+  margin: 0;
   font-size: 11px;
   line-height: 14px;
   font-weight: 600;
   color: #667085;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+}
+.help {
+  margin: 0;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #d0d5dd;
+  border-radius: 50%;
+  background: #fff;
+  color: #667085;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: help;
+  font-family: inherit;
+}
+.help:hover,
+.help:focus-visible {
+  border-color: #98a2b3;
+  color: #344054;
 }
 `;
 
@@ -61,9 +87,9 @@ export function chipsFor(signals, variant) {
             tone: signals.tone,
         });
     }
-    const perDay = formatPerDay(signals.perDay);
-    if (perDay) {
-        chips.push({ text: perDay, tone: 'muted' });
+    const rate = formatDisplayRate(signals);
+    if (rate) {
+        chips.push({ text: rate, tone: 'muted' });
     }
     const age = formatAge(signals.ageDays);
     if (age) {
@@ -122,10 +148,19 @@ export function createBadge(signals, variant = 'search') {
     const wrap = document.createElement('div');
     if (variant === 'vacancy') {
         wrap.className = 'panel';
+        const captionRow = document.createElement('div');
+        captionRow.className = 'caption-row';
         const caption = document.createElement('p');
         caption.className = 'caption';
         caption.textContent = 'job-xray';
-        wrap.appendChild(caption);
+        const help = document.createElement('button');
+        help.type = 'button';
+        help.className = 'help';
+        help.textContent = '?';
+        help.setAttribute('aria-label', 'Справка по меткам job-xray');
+        help.title = LEGEND_HELP;
+        captionRow.append(caption, help);
+        wrap.appendChild(captionRow);
     }
 
     const row = document.createElement('div');

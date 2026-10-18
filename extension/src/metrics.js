@@ -70,7 +70,13 @@ export function computeSignals(item, now = new Date()) {
         : false;
 
     const safeAge = ageDays != null && ageDays > 0 ? Math.max(ageDays, 1 / 24) : null;
-    const perDay = item.total != null && safeAge != null ? item.total / safeAge : null;
+    const perDayForTone = item.total != null && safeAge != null ? item.total / safeAge : null;
+    const perDay = item.total != null && ageDays != null && ageDays >= 1
+        ? item.total / ageDays
+        : null;
+    const perHour = item.total != null && ageDays != null && ageDays > 0 && ageDays < 1
+        ? item.total / (ageDays * 24)
+        : null;
     const properties = item.properties || [];
     const ai = inferAi(item);
     const totalAlt = item.totalAlt ?? null;
@@ -84,9 +90,11 @@ export function computeSignals(item, now = new Date()) {
         publishedDays,
         bumped,
         perDay,
+        perHour,
+        perDayForTone,
         tone: toneOf({
             total: item.total,
-            perDay,
+            perDay: perDayForTone,
             ageDays,
             unread: item.unread,
         }),
@@ -103,6 +111,26 @@ export function formatCount(value) {
         return '—';
     }
     return numberFormat.format(Math.round(value));
+}
+
+export function formatDisplayRate(signals) {
+    if (signals.perHour != null) {
+        return formatPerHourRu(signals.perHour);
+    }
+    if (signals.perDay != null) {
+        return formatPerDayRu(signals.perDay);
+    }
+    return null;
+}
+
+function formatPerHourRu(value) {
+    if (value == null || Number.isNaN(value)) {
+        return null;
+    }
+    if (value < 10) {
+        return `${value.toFixed(1).replace('.', ',')}/час`;
+    }
+    return `${Math.round(value)}/час`;
 }
 
 export const formatPerDay = formatPerDayRu;

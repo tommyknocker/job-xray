@@ -4,6 +4,16 @@ All notable changes to **job-xray** are documented here. The format follows [Kee
 
 Version numbers match `package.json`, extension manifests, and Git tags (`v*`). Website copy lives in [job-xray-site](https://github.com/tommyknocker/job-xray-site) (`data/changelog.php`).
 
+## [0.1.2] - 2026-10-18
+
+### Added
+
+- Vacancy panel: **?** help next to the job-xray caption (legend for chips: tariffs, age, rates, tones, counters).
+
+### Changed
+
+- Response rate for listings younger than 24 hours: show **per hour** (`N/час`) instead of extrapolated **per day**, which misread on “сегодня” vacancies.
+
 ## [0.1.1] - 2026-10-18
 
 ### Fixed
@@ -26,5 +36,6 @@ Version numbers match `package.json`, extension manifests, and Git tags (`v*`). 
 - Chromium and Firefox release packages via GitHub Actions (`job-xray-chromium.zip`, `job-xray-firefox.xpi`).
 - Local-only processing: reads `#HH-Lux-InitialState` on open hh.ru pages; no backend or telemetry.
 
+[0.1.2]: https://github.com/tommyknocker/job-xray/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/tommyknocker/job-xray/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/tommyknocker/job-xray/releases/tag/v0.1.0
