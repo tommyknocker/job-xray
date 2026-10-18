@@ -1,6 +1,6 @@
 # job-xray
 
-[Website](https://jobxray.ru) · [Source](https://github.com/tommyknocker/job-xray) · [Latest release](https://github.com/tommyknocker/job-xray/releases/latest)
+[Website](https://jobxray.ru) · [Source](https://github.com/tommyknocker/job-xray) · [Changelog](CHANGELOG.md) · [Latest release](https://github.com/tommyknocker/job-xray/releases/latest)
 
 [![Chrome](https://img.shields.io/badge/Chrome-Chromium-4285F4?logo=googlechrome&logoColor=white)](https://github.com/tommyknocker/job-xray/releases/latest/download/job-xray-chromium.zip)
 [![Edge](https://img.shields.io/badge/Edge-Chromium-0078D7?logo=microsoftedge&logoColor=white)](https://github.com/tommyknocker/job-xray/releases/latest/download/job-xray-chromium.zip)
@@ -65,3 +65,5 @@ npm test
 ## GitHub releases
 
 Tag `v0.1.1` (must match `package.json` version) and push. CI builds the packages and attaches them to the GitHub Release under the stable names above.
+
+After tagging, add the same release notes to [job-xray-site](https://github.com/tommyknocker/job-xray-site) (`data/changelog.php`, `config/site.php`). See [CHANGELOG.md](CHANGELOG.md).
