@@ -1,4 +1,5 @@
 import {
+    employerIdFromPath,
     extractInitialStateFromHtml,
     extractSearchVacancies,
     extractSearchVacanciesShard,
@@ -12,6 +13,10 @@ let resolveTimer = 0;
 let resolveInFlight = false;
 let lastResolvedKey = '';
 const failedResolveKeys = new Set();
+let employerResolveTimer = 0;
+let employerResolveInFlight = false;
+let lastEmployerResolvedKey = '';
+const failedEmployerResolveKeys = new Set();
 
 const SEARCH_MOUNT_RETRY_MS = [0, 200];
 
@@ -35,6 +40,8 @@ export function resetSearchShardCache() {
     shardById.clear();
     lastResolvedKey = '';
     failedResolveKeys.clear();
+    lastEmployerResolvedKey = '';
+    failedEmployerResolveKeys.clear();
 }
 
 /** @internal tests */
@@ -157,6 +164,90 @@ function scheduleMount(callback) {
     }
 }
 
+/** Employer shard API uses 1-based `page`; SERP pager DOM is 0-based like search. */
+function employerShardPageFromDom() {
+    return currentSerpPageIndexFromDom() + 1;
+}
+
+async function fetchEmployerVacancySearchShard(employerId, { page, itemsOnPage, hhtmSourceLabel }) {
+    const url = new URL('/shards/employerview/employer_vacancy_search', location.origin);
+    url.searchParams.set('items_on_page', String(itemsOnPage));
+    url.searchParams.set('order_by', 'relevance');
+    url.searchParams.set('search_period', '0');
+    url.searchParams.set('page', String(page));
+    url.searchParams.set('current_employer_id', employerId);
+    url.searchParams.set('hhtmSourceLabel', hhtmSourceLabel);
+    debug('employer fetch', url.toString());
+    const response = await fetch(url.toString(), { credentials: 'include' });
+    if (!response.ok) {
+        debug('employer fetch failed', response.status);
+        return null;
+    }
+    return response.json();
+}
+
+function ingestEmployerShardPayload(payload) {
+    const list = payload?.employerVacancySearch?.vacancies;
+    if (!Array.isArray(list) || list.length === 0) {
+        return false;
+    }
+    ingestSearchVacanciesShard(payload);
+    return true;
+}
+
+export function maybeResolveEmployerPageData(onResolved) {
+    const employerId = employerIdFromPath(location.pathname);
+    if (!employerId || countUnbadgedSerpCards() === 0) {
+        return;
+    }
+
+    const key = `${employerId}:${employerShardPageFromDom()}:${serpDomSignature()}`;
+    if (failedEmployerResolveKeys.has(key)) {
+        return;
+    }
+    if (key === lastEmployerResolvedKey && shardById.size > 0 && countUnbadgedSerpCards() === 0) {
+        onResolved?.();
+        return;
+    }
+
+    if (employerResolveTimer) {
+        window.clearTimeout(employerResolveTimer);
+    }
+    employerResolveTimer = window.setTimeout(async () => {
+        employerResolveTimer = 0;
+        if (employerResolveInFlight) {
+            return;
+        }
+        employerResolveInFlight = true;
+        try {
+            const page = employerShardPageFromDom();
+            let ok = ingestEmployerShardPayload(await fetchEmployerVacancySearchShard(employerId, {
+                page,
+                itemsOnPage: 50,
+                hhtmSourceLabel: 'employer_page_suitable_vacancies',
+            }));
+            if (countUnbadgedSerpCards() > 0) {
+                ok = ingestEmployerShardPayload(await fetchEmployerVacancySearchShard(employerId, {
+                    page,
+                    itemsOnPage: 50,
+                    hhtmSourceLabel: 'employer_page_vacancy_search_without_filters',
+                })) || ok;
+            }
+            if (ok) {
+                lastEmployerResolvedKey = key;
+                onResolved?.();
+            } else {
+                failedEmployerResolveKeys.add(key);
+            }
+        } catch (error) {
+            debug('employer resolve error', error);
+            failedEmployerResolveKeys.add(key);
+        } finally {
+            employerResolveInFlight = false;
+        }
+    }, 300);
+}
+
 export function maybeResolveSearchPageData(state, onResolved) {
     if (!needsSearchPageResolve(state)) {
         return;
@@ -210,8 +301,18 @@ export function registerSearchShardListener(onPayload) {
     }
     searchShardListenerRegistered = true;
     window.addEventListener('job-xray-search', (event) => {
-        resetSearchShardCache();
-        ingestSearchVacanciesShard(event.detail);
+        const payload = event.detail;
+        const employerList = payload?.employerVacancySearch?.vacancies;
+        const searchList = payload?.vacancySearchResult?.vacancies;
+        const fromEmployer = Array.isArray(employerList) && employerList.length > 0;
+        const fromSearch = Array.isArray(searchList) && searchList.length > 0;
+        if (!fromEmployer && !fromSearch) {
+            return;
+        }
+        if (fromSearch) {
+            resetSearchShardCache();
+        }
+        ingestSearchVacanciesShard(payload);
         scheduleMount(onPayload);
     });
     window.addEventListener('job-xray-search-page-html', (event) => {

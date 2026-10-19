@@ -13,6 +13,8 @@ import {
     resetRelatedVacancyCache,
 } from './related.js';
 import {
+    currentSerpPageIndexFromDom,
+    maybeResolveEmployerPageData,
     maybeResolveSearchPageData,
     registerSearchShardListener,
     resetSearchShardCache,
@@ -26,6 +28,7 @@ const SCAN_INTERVAL_MS = 2000;
 let lastHref = '';
 let lastSignature = '';
 let lastSerpDomSignature = '';
+let lastEmployerSerpPage = null;
 let scanTimer = 0;
 let hookedHistory = false;
 
@@ -40,6 +43,11 @@ function stateSignature(state) {
         const first = search.vacancies[0]?.vacancyId ?? '';
         const kind = state.vacancySearchResult?.vacancies ? 'search' : 'home';
         return `${kind}:${search.totalResults ?? search.resultsFound ?? ''}:${search.vacancies.length}:${first}`;
+    }
+    if (state.employerChameleonVacancies?.vacancies) {
+        const list = state.employerChameleonVacancies.vacancies;
+        const first = list[0]?.vacancyId ?? '';
+        return `employer-chameleon:${list.length}:${first}`;
     }
     const vacancyId = state.analyticsParams?.vacancyId
         ?? state.vacancyView?.vacancyFull?.vacancy?.vacancyId
@@ -86,6 +94,7 @@ function scan(force = false) {
         resetRelatedVacancyCache();
         resetSearchShardCache();
         lastSerpDomSignature = '';
+        lastEmployerSerpPage = null;
     }
 
     const state = readInitialStateFromDocument();
@@ -94,24 +103,34 @@ function scan(force = false) {
         lastSignature = signature;
     }
 
-    if (!state) {
-        return;
-    }
-
-    if (page === 'search' || page === 'home') {
+    if (page === 'search' || page === 'home' || page === 'employer') {
         if (page === 'search') {
             const domSignature = serpDomSignature();
             if (domSignature !== lastSerpDomSignature) {
                 lastSerpDomSignature = domSignature;
                 resetSearchShardCache();
             }
+        } else if (page === 'employer') {
+            const pageIndex = currentSerpPageIndexFromDom();
+            if (lastEmployerSerpPage != null && pageIndex !== lastEmployerSerpPage) {
+                resetSearchShardCache();
+            }
+            lastEmployerSerpPage = pageIndex;
         }
-        applySearchBadges(state);
-        if (page === 'search') {
+        applySearchBadges(state ?? {});
+        if (page === 'search' && state) {
             maybeResolveSearchPageData(state, () => {
                 applySearchBadges(readInitialStateFromDocument() ?? state);
             });
+        } else if (page === 'employer') {
+            maybeResolveEmployerPageData(() => {
+                applySearchBadges(readInitialStateFromDocument() ?? {});
+            });
         }
+        return;
+    }
+
+    if (!state) {
         return;
     }
     if (page === 'vacancy') {
@@ -200,13 +219,10 @@ registerRelatedVacanciesListener(() => {
 
 registerSearchShardListener(() => {
     const page = detectPage(location.pathname);
-    if (page !== 'search' && page !== 'home') {
+    if (page !== 'search' && page !== 'home' && page !== 'employer') {
         return;
     }
-    const state = readInitialStateFromDocument();
-    if (state) {
-        applySearchBadges(state);
-    }
+    applySearchBadges(readInitialStateFromDocument() ?? {});
 });
 
 hookHistory();

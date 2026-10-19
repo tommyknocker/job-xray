@@ -1,0 +1,38 @@
+{
+  "employerChameleonVacancies": {
+    "vacancies": [
+      {
+        "vacancyId": 138614576,
+        "name": "Руководитель группы разработки интеллектуальных сервисов",
+        "totalResponsesCount": 108,
+        "responsesCount": 15,
+        "creationTime": "2026-10-19T14:22:25.680+03:00",
+        "publicationTime": {
+          "@timestamp": 1792408945,
+          "$": "2026-10-19T14:22:25.680+03:00"
+        },
+        "userTestPresent": false,
+        "@responseLetterRequired": false,
+        "autoResponse": {
+          "acceptAutoResponse": false
+        }
+      },
+      {
+        "vacancyId": 138622606,
+        "name": "LLM Engineer",
+        "totalResponsesCount": 112,
+        "responsesCount": 14,
+        "creationTime": "2026-10-19T16:28:44.945+03:00",
+        "publicationTime": {
+          "@timestamp": 1792416524,
+          "$": "2026-10-19T16:28:44.945+03:00"
+        },
+        "userTestPresent": true,
+        "@responseLetterRequired": false,
+        "autoResponse": {
+          "acceptAutoResponse": false
+        }
+      }
+    ]
+  }
+}

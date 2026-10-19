@@ -11,7 +11,21 @@
         {
             re: /\/shards\/vacancy\/search(?:\?|$|\/)/,
             type: 'job-xray:search-vacancies',
-            valid: (payload) => Array.isArray(payload?.vacancySearchResult?.vacancies),
+            valid: (payload) => {
+                const list = payload?.vacancySearchResult?.vacancies;
+                return Array.isArray(list) && list.length > 0;
+            },
+        },
+        {
+            re: /\/shards\/employerview\/employer_vacancy_search(?:\?|$|\/)/,
+            type: 'job-xray:search-vacancies',
+            valid: (payload, url) => {
+                if (String(url).includes('getVacancyCount=true')) {
+                    return false;
+                }
+                const list = payload?.employerVacancySearch?.vacancies;
+                return Array.isArray(list) && list.length > 0;
+            },
         },
     ];
 
@@ -32,8 +46,8 @@
         return ROUTES.find((route) => route.re.test(String(url)));
     }
 
-    function emit(route, payload) {
-        if (!route?.valid(payload)) {
+    function emit(route, payload, url) {
+        if (!route?.valid(payload, url)) {
             return;
         }
         window.postMessage({ type: route.type, payload }, '*');
@@ -56,7 +70,7 @@
             return;
         }
         try {
-            emit(route, JSON.parse(text));
+            emit(route, JSON.parse(text), rawUrl);
         } catch {
             // ignore
         }

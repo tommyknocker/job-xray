@@ -3,6 +3,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+    detectPage,
+    employerIdFromPath,
     extractInitialStateFromHtml,
     extractRelatedVacanciesShard,
     extractSearchVacancies,
@@ -147,6 +149,43 @@ function runFixtureTests() {
     resetSearchShardCache();
     ingestSearchVacanciesShard(searchShard);
     assert.equal(searchShardCacheSize(), 1);
+
+    assert.equal(detectPage('/'), 'home');
+    assert.equal(detectPage('/search/vacancy'), 'search');
+    assert.equal(detectPage('/employer/4335309'), 'employer');
+    assert.equal(employerIdFromPath('/employer/4335309'), '4335309');
+    assert.equal(employerIdFromPath('/search/vacancy'), null);
+    assert.equal(detectPage('/vacancy/137961989'), 'vacancy');
+    assert.equal(detectPage('/applicant/negotiations'), null);
+
+    const employerShard = JSON.parse(
+        readFileSync(join(root, 'tests/fixtures/employer-vacancy-search.json'), 'utf8'),
+    );
+    const employerItems = extractSearchVacanciesShard(employerShard);
+    assert.equal(employerItems.length, 2);
+    assert.equal(employerItems[0].id, '138134718');
+    assert.equal(employerItems[0].total, 363);
+    assert.equal(employerItems[0].unread, 293);
+
+    const chameleonState = JSON.parse(
+        readFileSync(join(root, 'tests/fixtures/employer-chameleon-vacancies.json'), 'utf8'),
+    );
+    const chameleonItems = extractSearchVacancies(chameleonState);
+    assert.equal(chameleonItems.length, 2);
+    assert.equal(chameleonItems[0].id, '138614576');
+    assert.equal(chameleonItems[0].total, 108);
+    assert.equal(chameleonItems[0].unread, 15);
+
+    const homeState = JSON.parse(
+        readFileSync(join(root, 'tests/fixtures/index-recommended.json'), 'utf8'),
+    );
+    const homeItems = extractSearchVacancies(homeState);
+    assert.equal(homeItems.length, 2);
+    assert.equal(homeItems[0].id, '137961989');
+    assert.equal(homeItems[0].total, 467);
+    assert.equal(homeItems[0].unread, 448);
+    assert.equal(homeItems[1].id, '138569363');
+    assert.equal(homeItems[1].unread, 12);
 }
 
 function runIntegrationTests() {
@@ -204,6 +243,16 @@ function runIntegrationTests() {
     resetSearchShardCache();
     assert.ok(ingestSearchVacanciesHtml(searchHtml));
     assert.equal(searchShardCacheSize(), 50);
+
+    if (existsSync(join(root, 'data', 'test7.html'))) {
+        const homeState = loadHtmlState('test7.html');
+        const home = extractSearchVacancies(homeState);
+        assert.equal(home.length, 6);
+        assert.equal(home[0].id, '137961989');
+        assert.equal(home[0].total, 467);
+        assert.equal(home[0].unread, 448);
+        assert.equal(detectPage('/'), 'home');
+    }
 
     return search.length;
 }

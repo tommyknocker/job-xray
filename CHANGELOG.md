@@ -4,6 +4,21 @@ All notable changes to **job-xray** are documented here. The format follows [Kee
 
 Version numbers match `package.json`, extension manifests, and Git tags (`v*`). Website copy lives in [job-xray-site](https://github.com/tommyknocker/job-xray-site) (`data/changelog.php`).
 
+## [Unreleased]
+
+## [0.1.6] - 2026-10-19
+
+### Added
+
+- Employer page vacancies tab (`/employer/{id}?tab=VACANCIES`): badges from GET `/shards/employerview/employer_vacancy_search` (`employerVacancySearch.vacancies`).
+- Employer pages: content-script fallback fetch for `employer_vacancy_search` when SERP cards have no badge data (same idea as search HTML resolve).
+- `docs/sources.md`: where counters come from per page type (InitialState, shards, cache rules).
+
+### Fixed
+
+- Employer «О компании» tab: «Подходящие вакансии» stayed without badges when `getVacancyCount` shard returned an empty `vacancies` list (wiped cache) or when SERP cards appeared after the first shard (employer page no longer clears cache on every DOM change).
+- Employer «Подходящие вакансии»: counters live in `employerChameleonVacancies` in InitialState (not only in `employer_vacancy_search` shard); badges also apply when Lux state is empty but shard cache is filled.
+
 ## [0.1.5] - 2026-10-18
 
 ### Added
@@ -66,6 +81,7 @@ Version numbers match `package.json`, extension manifests, and Git tags (`v*`). 
 - Chromium and Firefox release packages via GitHub Actions (`job-xray-chromium.zip`, `job-xray-firefox.xpi`).
 - Local-only processing: reads `#HH-Lux-InitialState` on open hh.ru pages; no backend or telemetry.
 
+[0.1.6]: https://github.com/tommyknocker/job-xray/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/tommyknocker/job-xray/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/tommyknocker/job-xray/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/tommyknocker/job-xray/compare/v0.1.2...v0.1.3

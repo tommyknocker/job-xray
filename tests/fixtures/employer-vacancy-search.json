@@ -1,0 +1,192 @@
+{
+  "employerVacancySearch": {
+    "vacancies": [
+      {
+        "vacancyId": 138134718,
+        "name": "Тестировщик-автоматизатор (Python)/ QA Automation Engineer (Python/Java)",
+        "totalResponsesCount": 363,
+        "responsesCount": 293,
+        "creationTime": "2026-10-05T15:29:40.129+03:00",
+        "publicationTime": {
+          "@timestamp": 1791203380,
+          "$": "2026-10-05T15:29:40.129+03:00"
+        },
+        "userTestPresent": false,
+        "@responseLetterRequired": false,
+        "autoResponse": {
+          "acceptAutoResponse": false
+        },
+        "vacancyProperties": {
+          "properties": [
+            {
+              "property": [
+                {
+                  "id": 713101044,
+                  "propertyType": "HH_STANDARD",
+                  "defining": true,
+                  "classifying": true,
+                  "bundle": "HH",
+                  "propertyWeight": 400,
+                  "parameters": [
+                    {
+                      "parameter": [
+                        {
+                          "key": "packageName",
+                          "value": "VP"
+                        },
+                        {
+                          "key": "serviceId",
+                          "value": "68534496"
+                        }
+                      ]
+                    }
+                  ],
+                  "startTimeIso": "2026-10-05T15:29:40.129+03:00",
+                  "endTimeIso": "2026-11-04T15:29:40.129+03:00"
+                },
+                {
+                  "id": 713101045,
+                  "propertyType": "HH_SEARCH_RESULTS_NORMAL_POSITION",
+                  "bundle": "HH",
+                  "propertyWeight": 400,
+                  "parameters": [
+                    {
+                      "parameter": [
+                        {
+                          "key": "packageName",
+                          "value": "VP"
+                        },
+                        {
+                          "key": "serviceId",
+                          "value": "68534496"
+                        }
+                      ]
+                    }
+                  ],
+                  "startTimeIso": "2026-10-05T15:29:40.129+03:00",
+                  "endTimeIso": "2026-11-04T15:29:40.129+03:00"
+                }
+              ]
+            }
+          ],
+          "calculatedStates": {
+            "HH": {
+              "advertising": false,
+              "anonymous": false,
+              "filteredPropertyNames": [
+                "HH_SEARCH_RESULTS_NORMAL_POSITION",
+                "HH_STANDARD"
+              ],
+              "free": false,
+              "inPlatformCommunication": false,
+              "optimum": false,
+              "optionPremium": false,
+              "payForPerformance": false,
+              "premium": false,
+              "standard": true,
+              "standardPlus": false,
+              "translationKeys": [
+                "employer.VacancyCreate.PublicationType.STANDARD"
+              ],
+              "virtualRecruiter": false,
+              "translation": "Стандарт"
+            }
+          }
+        }
+      },
+      {
+        "vacancyId": 138090043,
+        "name": "Системный аналитик (ERP)",
+        "totalResponsesCount": 248,
+        "responsesCount": 219,
+        "creationTime": "2026-10-04T15:45:29.704+03:00",
+        "publicationTime": {
+          "@timestamp": 1791117929,
+          "$": "2026-10-04T15:45:29.704+03:00"
+        },
+        "userTestPresent": false,
+        "@responseLetterRequired": false,
+        "autoResponse": {
+          "acceptAutoResponse": true
+        },
+        "vacancyProperties": {
+          "properties": [
+            {
+              "property": [
+                {
+                  "id": 712448932,
+                  "propertyType": "HH_STANDARD",
+                  "defining": true,
+                  "classifying": true,
+                  "bundle": "HH",
+                  "propertyWeight": 400,
+                  "parameters": [
+                    {
+                      "parameter": [
+                        {
+                          "key": "packageName",
+                          "value": "VP"
+                        },
+                        {
+                          "key": "serviceId",
+                          "value": "68520700"
+                        }
+                      ]
+                    }
+                  ],
+                  "startTimeIso": "2026-10-04T15:45:29.704+03:00",
+                  "endTimeIso": "2026-11-03T15:45:29.704+03:00"
+                },
+                {
+                  "id": 712448931,
+                  "propertyType": "HH_SEARCH_RESULTS_NORMAL_POSITION",
+                  "bundle": "HH",
+                  "propertyWeight": 400,
+                  "parameters": [
+                    {
+                      "parameter": [
+                        {
+                          "key": "packageName",
+                          "value": "VP"
+                        },
+                        {
+                          "key": "serviceId",
+                          "value": "68520700"
+                        }
+                      ]
+                    }
+                  ],
+                  "startTimeIso": "2026-10-04T15:45:29.704+03:00",
+                  "endTimeIso": "2026-11-03T15:45:29.704+03:00"
+                }
+              ]
+            }
+          ],
+          "calculatedStates": {
+            "HH": {
+              "advertising": false,
+              "anonymous": false,
+              "filteredPropertyNames": [
+                "HH_SEARCH_RESULTS_NORMAL_POSITION",
+                "HH_STANDARD"
+              ],
+              "free": false,
+              "inPlatformCommunication": false,
+              "optimum": false,
+              "optionPremium": false,
+              "payForPerformance": false,
+              "premium": false,
+              "standard": true,
+              "standardPlus": false,
+              "translationKeys": [
+                "employer.VacancyCreate.PublicationType.STANDARD"
+              ],
+              "virtualRecruiter": false,
+              "translation": "Стандарт"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

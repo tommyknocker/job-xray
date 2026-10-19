@@ -209,6 +209,10 @@ function vacancyListFromState(state) {
     if (Array.isArray(state?.recommendedVacancies?.vacancies)) {
         return state.recommendedVacancies.vacancies;
     }
+    /** Employer «О компании» — «Подходящие вакансии» (SSR in InitialState). */
+    if (Array.isArray(state?.employerChameleonVacancies?.vacancies)) {
+        return state.employerChameleonVacancies.vacancies;
+    }
     return [];
 }
 
@@ -218,7 +222,9 @@ export function extractSearchVacancies(state) {
 
 /** `/shards/vacancy/search` — SPA pagination on vacancy search. */
 export function extractSearchVacanciesShard(payload) {
-    const list = payload?.vacancySearchResult?.vacancies ?? payload?.vacancies;
+    const list = payload?.vacancySearchResult?.vacancies
+        ?? payload?.employerVacancySearch?.vacancies
+        ?? payload?.vacancies;
     if (!Array.isArray(list)) {
         return [];
     }
@@ -293,9 +299,17 @@ export function vacancyIdFromPath(pathname) {
     return match ? match[1] : null;
 }
 
+export function employerIdFromPath(pathname) {
+    const match = pathname.match(/\/employer\/(\d+)/);
+    return match ? match[1] : null;
+}
+
 export function detectPage(pathname) {
     if (/\/search\/vacancy/.test(pathname)) {
         return 'search';
+    }
+    if (/\/employer\/\d+/.test(pathname)) {
+        return 'employer';
     }
     if (vacancyIdFromPath(pathname)) {
         return 'vacancy';
