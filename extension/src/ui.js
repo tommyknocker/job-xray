@@ -131,19 +131,61 @@ const STYLES = `
 }
 `;
 
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
 const ICONS = {
-    eye: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1.5 8s2.6-4.5 6.5-4.5S14.5 8 14.5 8s-2.6 4.5-6.5 4.5S1.5 8 1.5 8Z"/><circle cx="8" cy="8" r="1.8"/></svg>',
-    calendar: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2.25" y="3.25" width="11.5" height="10.5" rx="1.5"/><path d="M2.25 6.5h11.5M5.25 2.25v2M10.75 2.25v2"/></svg>',
-    refresh: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M13.2 8A5.2 5.2 0 1 1 11.6 3.7"/><path d="M11 2.4h2.6V5"/></svg>',
+    eye: [
+        { name: 'path', d: 'M1.5 8s2.6-4.5 6.5-4.5S14.5 8 14.5 8s-2.6 4.5-6.5 4.5S1.5 8 1.5 8Z' },
+        { name: 'circle', cx: '8', cy: '8', r: '1.8' },
+    ],
+    calendar: [
+        { name: 'rect', x: '2.25', y: '3.25', width: '11.5', height: '10.5', rx: '1.5' },
+        { name: 'path', d: 'M2.25 6.5h11.5M5.25 2.25v2M10.75 2.25v2' },
+    ],
+    refresh: [
+        { name: 'path', d: 'M13.2 8A5.2 5.2 0 1 1 11.6 3.7' },
+        { name: 'path', d: 'M11 2.4h2.6V5' },
+    ],
 };
+
+function svgNode(name, attrs) {
+    const el = document.createElementNS(SVG_NS, name);
+    for (const [key, value] of Object.entries(attrs)) {
+        el.setAttribute(key, value);
+    }
+    return el;
+}
+
+function iconElement(name) {
+    const parts = ICONS[name];
+    if (!parts) {
+        return null;
+    }
+    const svg = svgNode('svg', {
+        viewBox: '0 0 16 16',
+        fill: 'none',
+        stroke: 'currentColor',
+        'stroke-width': '1.5',
+        'aria-hidden': 'true',
+    });
+    if (name === 'refresh') {
+        svg.setAttribute('stroke-linecap', 'round');
+    }
+    for (const part of parts) {
+        const { name: tag, ...attrs } = part;
+        svg.appendChild(svgNode(tag, attrs));
+    }
+    return svg;
+}
 
 function chip({ text, tone, icon, tooltip }) {
     const el = document.createElement('span');
     el.className = `chip ${tone}`;
-    if (icon && ICONS[icon]) {
+    const markSvg = icon ? iconElement(icon) : null;
+    if (markSvg) {
         const mark = document.createElement('span');
         mark.className = 'ico';
-        mark.innerHTML = ICONS[icon];
+        mark.appendChild(markSvg);
         el.appendChild(mark);
     }
     const label = document.createElement('span');

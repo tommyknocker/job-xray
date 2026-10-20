@@ -19,6 +19,10 @@ Version numbers match `package.json`, extension manifests, and Git tags (`v*`). 
 
 - «автоподъём» from `HH_AUTO_RENEWAL` (interval + next date in tooltip). Manual bump still shows «подняли» when publication is newer than creation and there is no auto-renewal.
 
+### Fixed
+
+- Firefox / AMO: chip icons are built with `createElementNS` instead of `innerHTML` (addons-linter “dynamic unsanitized innerHTML”).
+
 ## [0.1.6] - 2026-10-19
 
 ### Added

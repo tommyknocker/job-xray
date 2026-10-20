@@ -126,7 +126,7 @@ export function readInitialStateFromDocument(doc = document) {
         return null;
     }
 
-    const raw = el.innerHTML || el.textContent || '';
+    const raw = el.textContent || '';
     return parseJsonPayload(raw);
 }
 

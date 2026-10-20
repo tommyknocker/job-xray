@@ -81,6 +81,13 @@ export async function validateFirefoxBundle() {
 
     parseAsFirefoxScript(bundle, 'content.js (Firefox bundle)');
 
+    const htmlWrite = bundle.match(/\.(innerHTML|outerHTML)\s*=|insertAdjacentHTML\s*\(|document\.write\s*\(/);
+    if (htmlWrite) {
+        throw new Error(
+            `Firefox content bundle assigns HTML (${htmlWrite[0].trim()}) — AMO rejects unsanitized innerHTML`,
+        );
+    }
+
     for (const rel of ['extension/src/network-hook.js', 'extension/page-network-hook.js']) {
         const source = await readFile(join(root, rel), 'utf8');
         parseAsFirefoxScript(source, rel);
