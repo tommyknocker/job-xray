@@ -1,4 +1,12 @@
-import { CHIP, LEGEND_HELP, badgeTooltipParts } from './copy.ru.js';
+import {
+    CHIP,
+    LEGEND_HELP,
+    TOOLTIP,
+    ageChipTooltip,
+    autoRenewalTooltip,
+    formatDateRu,
+    formatDayMonthRu,
+} from './copy.ru.js';
 import { formatAge, formatCount, formatDisplayRate } from './metrics.js';
 
 const STYLES = `
@@ -6,6 +14,7 @@ const STYLES = `
   display: block;
   width: 100%;
   min-width: 0;
+  overflow: visible;
   font-family: Inter, "Helvetica Neue", Arial, sans-serif;
 }
 .row {
@@ -13,16 +22,65 @@ const STYLES = `
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
+  overflow: visible;
 }
 .chip {
+  position: relative;
   display: inline-flex;
   align-items: center;
+  gap: 4px;
   padding: 2px 8px;
   border-radius: 8px;
   font-size: 12px;
   line-height: 16px;
   font-weight: 600;
   letter-spacing: 0.01em;
+}
+.chip[aria-label] {
+  cursor: help;
+}
+.ico {
+  display: inline-flex;
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+.ico svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+.tip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%);
+  z-index: 4;
+  width: max-content;
+  max-width: min(240px, 70vw);
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #1d2939;
+  color: #fff;
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-align: center;
+  white-space: normal;
+  box-shadow: 0 8px 16px rgba(16, 24, 40, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.chip:hover,
+.chip:focus-visible {
+  z-index: 5;
+}
+.chip:hover .tip,
+.chip:focus-visible .tip {
+  opacity: 1;
+  visibility: visible;
 }
 .good { background: #e7f6ee; color: #17643d; }
 .mid { background: #fff3d0; color: #7a5600; }
@@ -34,6 +92,7 @@ const STYLES = `
   border-radius: 12px;
   background: #f8fafc;
   border: 1px solid #e4e7ec;
+  overflow: visible;
 }
 .caption-row {
   display: flex;
@@ -72,65 +131,158 @@ const STYLES = `
 }
 `;
 
-function chip(text, tone) {
+const ICONS = {
+    eye: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1.5 8s2.6-4.5 6.5-4.5S14.5 8 14.5 8s-2.6 4.5-6.5 4.5S1.5 8 1.5 8Z"/><circle cx="8" cy="8" r="1.8"/></svg>',
+    calendar: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2.25" y="3.25" width="11.5" height="10.5" rx="1.5"/><path d="M2.25 6.5h11.5M5.25 2.25v2M10.75 2.25v2"/></svg>',
+    refresh: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M13.2 8A5.2 5.2 0 1 1 11.6 3.7"/><path d="M11 2.4h2.6V5"/></svg>',
+};
+
+function chip({ text, tone, icon, tooltip }) {
     const el = document.createElement('span');
     el.className = `chip ${tone}`;
-    el.textContent = text;
+    if (icon && ICONS[icon]) {
+        const mark = document.createElement('span');
+        mark.className = 'ico';
+        mark.innerHTML = ICONS[icon];
+        el.appendChild(mark);
+    }
+    const label = document.createElement('span');
+    label.textContent = text;
+    el.appendChild(label);
+    if (tooltip) {
+        el.setAttribute('aria-label', tooltip);
+        const tip = document.createElement('span');
+        tip.className = 'tip';
+        tip.textContent = tooltip;
+        el.appendChild(tip);
+    }
     return el;
 }
 
-export function chipsFor(signals, variant) {
+function pushAiChips(chips, signals) {
+    const ai = signals.ai || {};
+    if (ai.nra) {
+        chips.push({ text: CHIP.aiReview, tone: 'mid', tooltip: TOOLTIP.aiReview });
+    }
+    if (ai.survey) {
+        chips.push({ text: CHIP.aiSurvey, tone: 'mid', tooltip: TOOLTIP.aiSurvey });
+    }
+    if (ai.assistant) {
+        chips.push({ text: CHIP.aiAssistant, tone: 'mid', tooltip: TOOLTIP.aiAssistant });
+    }
+    if (ai.callSummary) {
+        chips.push({ text: CHIP.aiCall, tone: 'mid', tooltip: TOOLTIP.aiCall });
+    }
+    if (ai.invite) {
+        chips.push({ text: CHIP.aiInvite, tone: 'mid', tooltip: TOOLTIP.aiInvite });
+    }
+}
+
+export function chipsFor(signals, variant, options = {}) {
     const chips = [];
     if (signals.total != null) {
         chips.push({
             text: CHIP.responses(formatCount(signals.total), signals.countersUnstable),
             tone: signals.tone,
+            tooltip: variant === 'search'
+                ? `откликов (выдача hh.ru): ${formatCount(signals.total)}`
+                : `откликов (страница вакансии): ${formatCount(signals.total)}`,
+        });
+    }
+    const showViewers = signals.onlineViewers > 0 && !options.hideOnlineViewers;
+    if (showViewers) {
+        chips.push({
+            text: CHIP.viewers(formatCount(signals.onlineViewers)),
+            tone: 'muted',
+            icon: 'eye',
+            tooltip: TOOLTIP.viewers(signals.onlineViewers),
         });
     }
     const rate = formatDisplayRate(signals);
     if (rate) {
-        chips.push({ text: rate, tone: 'muted' });
+        chips.push({
+            text: rate,
+            tone: 'muted',
+            tooltip: signals.perHour != null
+                ? TOOLTIP.perHour(signals.perHour)
+                : TOOLTIP.perDay(signals.perDay),
+        });
     }
     const age = formatAge(signals.ageDays);
     if (age) {
-        chips.push({ text: age, tone: 'muted' });
+        chips.push({
+            text: age,
+            tone: 'muted',
+            tooltip: ageChipTooltip(signals),
+        });
     }
     if (signals.unread != null) {
         chips.push({
             text: CHIP.unread(formatCount(signals.unread)),
             tone: signals.unread === 0 ? 'zombie' : 'muted',
+            tooltip: TOOLTIP.unread(signals.unread),
         });
     }
-    if (signals.bumped) {
-        chips.push({ text: CHIP.bumped, tone: 'muted' });
+    if (signals.autoRenewal) {
+        chips.push({
+            text: CHIP.autoRenewal,
+            tone: 'muted',
+            icon: 'refresh',
+            tooltip: autoRenewalTooltip(signals),
+        });
+    } else if (signals.bumped) {
+        chips.push({
+            text: CHIP.bumped,
+            tone: 'muted',
+            tooltip: TOOLTIP.bumped,
+        });
+    }
+    const until = formatDayMonthRu(signals.listingEndsAt);
+    if (signals.listingDaysLeft != null && signals.listingDaysLeft < 0) {
+        chips.push({
+            text: CHIP.expired,
+            tone: 'zombie',
+            icon: 'calendar',
+            tooltip: TOOLTIP.expired,
+        });
+    } else if (until) {
+        chips.push({
+            text: CHIP.until(until),
+            tone: signals.listingDaysLeft != null && signals.listingDaysLeft < 3 ? 'mid' : 'muted',
+            icon: 'calendar',
+            tooltip: TOOLTIP.until(formatDateRu(signals.listingEndsAt)),
+        });
     }
     if (variant === 'vacancy') {
         if (signals.tariff) {
-            chips.push({ text: signals.tariff, tone: 'muted' });
+            chips.push({
+                text: signals.tariff,
+                tone: 'muted',
+                tooltip: `тариф размещения: ${signals.tariff}`,
+            });
         }
         if (signals.boosted) {
-            chips.push({ text: CHIP.boost, tone: 'hot' });
+            chips.push({ text: CHIP.boost, tone: 'hot', tooltip: TOOLTIP.boost });
         }
-        if (signals.hasAi) {
-            chips.push({ text: CHIP.aiReview, tone: 'mid' });
-        }
+        pushAiChips(chips, signals);
         if (signals.hasTest) {
-            chips.push({ text: CHIP.test, tone: 'muted' });
+            chips.push({ text: CHIP.test, tone: 'muted', tooltip: TOOLTIP.test });
         }
         if (signals.letterRequired) {
-            chips.push({ text: CHIP.letter, tone: 'muted' });
+            chips.push({ text: CHIP.letter, tone: 'muted', tooltip: TOOLTIP.letter });
         }
         if (signals.countersUnstable && signals.totalAlt != null) {
             chips.push({
                 text: CHIP.altCounter(formatCount(signals.totalAlt)),
                 tone: 'zombie',
+                tooltip: `ещё один счётчик hh: ${formatCount(signals.totalAlt)}`,
             });
         }
     }
     return chips;
 }
 
-export function createBadge(signals, variant = 'search') {
+export function createBadge(signals, variant = 'search', options = {}) {
     const host = document.createElement('div');
     host.dataset.jobXray = signals.id;
     host.setAttribute('data-job-xray', signals.id);
@@ -165,13 +317,11 @@ export function createBadge(signals, variant = 'search') {
 
     const row = document.createElement('div');
     row.className = 'row';
-    chipsFor(signals, variant).forEach(({ text, tone }) => {
-        row.appendChild(chip(text, tone));
+    chipsFor(signals, variant, options).forEach((item) => {
+        row.appendChild(chip(item));
     });
     wrap.appendChild(row);
     shadow.appendChild(wrap);
-
-    host.title = badgeTooltipParts(signals, variant).join(' · ');
 
     return host;
 }
@@ -236,12 +386,31 @@ function searchCardMountPoint(article) {
     return { mode: 'append', node: article };
 }
 
+export function cardShowsHhViewers(root) {
+    if (!root?.querySelectorAll) {
+        return false;
+    }
+    const nodes = root.querySelectorAll('span, p');
+    for (const node of nodes) {
+        if (node.closest?.('[data-job-xray]')) {
+            continue;
+        }
+        const text = (node.textContent || '').replace(/\s+/g, ' ').trim();
+        if (/сейчас смотрят/i.test(text) || /сейчас эту вакансию/i.test(text)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 export function mountOnSearchCard(article, signals) {
     if (article.querySelector('[data-job-xray]')) {
         return;
     }
 
-    const badge = createBadge(signals, 'search');
+    const badge = createBadge(signals, 'search', {
+        hideOnlineViewers: cardShowsHhViewers(article),
+    });
     const point = searchCardMountPoint(article);
     if (point.mode === 'after' && point.ref) {
         point.ref.insertAdjacentElement('afterend', badge);

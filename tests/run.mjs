@@ -27,6 +27,7 @@ import {
     searchShardCacheSize,
 } from '../extension/src/searchShard.js';
 import { computeSignals, formatAge, formatPerDay, toneOf } from '../extension/src/metrics.js';
+import { formatDayMonthRu, formatEveryDaysRu } from '../extension/src/copy.ru.js';
 import { chipsFor } from '../extension/src/ui.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -67,7 +68,11 @@ function runFixtureTests() {
     assert.equal(fx.id, '137961989');
     assert.equal(fx.total, 447);
     assert.equal(fx.tariff, 'Стандарт плюс');
-    assert.equal(fx.bumped, true);
+    assert.equal(fx.bumped, false);
+    assert.ok(fx.autoRenewal);
+    assert.equal(fx.autoRenewal.intervalMinutes, 4320);
+    assert.equal(formatDayMonthRu(fx.listingEndsAt), '30.10');
+    assert.equal(formatEveryDaysRu(4320), 'каждые 3 дня');
     assert.equal(vacancyIdFromPath('/vacancy/137961989'), '137961989');
 
     const dualSearch = JSON.parse(
@@ -86,6 +91,15 @@ function runFixtureTests() {
     assert.equal(pikSerp.unread, 636);
     assert.equal(pikSerp.totalAlt, 1940);
     assert.equal(pikSerp.countersUnstable, false);
+    assert.equal(pikSerp.onlineViewers, 3);
+    assert.equal(pikSerp.bumped, true);
+    assert.equal(pikSerp.autoRenewal, null);
+    assert.equal(formatDayMonthRu(pikSerp.listingEndsAt), '25.10');
+    const pikSearchChips = chipsFor(pikSerp, 'search');
+    assert.ok(pikSearchChips.some((chip) => chip.icon === 'eye' && chip.text === '3'));
+    assert.ok(pikSearchChips.some((chip) => chip.icon === 'calendar' && chip.text === 'до 25.10'));
+    assert.ok(pikSearchChips.some((chip) => chip.text === 'подняли'));
+    assert.ok(chipsFor(pikSerp, 'search', { hideOnlineViewers: true }).every((chip) => chip.icon !== 'eye'));
 
     const pikExtra = JSON.parse(
         readFileSync(join(root, 'tests/fixtures/pik-136655566-vacancy-extra.json'), 'utf8'),
@@ -118,6 +132,8 @@ function runFixtureTests() {
     assert.equal(freshSignals.total, 103);
     assert.ok(freshSignals.perHour != null && freshSignals.perHour < 200);
     assert.equal(freshSignals.perDay, null);
+    assert.equal(freshSignals.onlineViewers, 51);
+    assert.equal(formatDayMonthRu(freshSignals.listingEndsAt), '17.11');
     const freshRateChips = chipsFor(freshSignals, 'vacancy').map((chip) => chip.text);
     assert.ok(freshRateChips.some((text) => text.includes('/час')));
     assert.ok(!freshRateChips.some((text) => text.includes('/день')));
@@ -133,6 +149,19 @@ function runFixtureTests() {
     assert.equal(related[1].total, 253);
     assert.equal(related[1].unread, 132);
     assert.notEqual(related[1].total, related[1].unread);
+    const relatedSignals = computeSignals(related[0], NOW);
+    assert.ok(relatedSignals.autoRenewal);
+    assert.equal(relatedSignals.ai.nra, true);
+    assert.equal(relatedSignals.ai.survey, true);
+    assert.equal(relatedSignals.ai.assistant, true);
+    assert.equal(relatedSignals.ai.callSummary, true);
+    const relatedVacancyChips = chipsFor(relatedSignals, 'vacancy').map((chip) => chip.text);
+    assert.ok(relatedVacancyChips.includes('автоподъём'));
+    assert.ok(!relatedVacancyChips.includes('подняли'));
+    assert.ok(relatedVacancyChips.includes('AI-разбор'));
+    assert.ok(relatedVacancyChips.includes('AI-опрос'));
+    assert.ok(relatedVacancyChips.includes('AI-ассистент'));
+    assert.ok(relatedVacancyChips.includes('AI-звонок'));
 
     resetRelatedVacancyCache();
     ingestRelatedVacanciesPayload({ vacancies: [relatedShard.vacancies[0]] });

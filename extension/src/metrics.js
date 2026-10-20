@@ -47,25 +47,26 @@ export function toneOf({ total, perDay, ageDays, unread }) {
 }
 
 function inferAi(item) {
-    if (item.ai) {
-        return {
-            nra: Boolean(item.ai.nra),
-            survey: Boolean(item.ai.survey),
-            assistant: Boolean(item.ai.assistant),
-        };
-    }
     const properties = item.properties || [];
+    const fromItem = item.ai || {};
     return {
-        nra: properties.includes('HH_NEURO_RESPONSE_ANALYZER'),
-        survey: properties.includes('HH_NEURO_SURVEY'),
-        assistant: properties.includes('HH_AI_ASSISTANT'),
+        nra: Boolean(fromItem.nra) || properties.includes('HH_NEURO_RESPONSE_ANALYZER'),
+        survey: Boolean(fromItem.survey) || properties.includes('HH_NEURO_SURVEY'),
+        assistant: Boolean(fromItem.assistant) || properties.includes('HH_AI_ASSISTANT'),
+        callSummary: Boolean(fromItem.callSummary) || properties.includes('HH_NEURO_CALL_SUMMARY'),
+        invite: Boolean(fromItem.invite),
     };
 }
 
 export function computeSignals(item, now = new Date()) {
     const ageDays = daysBetween(item.createdAt, now);
     const publishedDays = daysBetween(item.publishedAt, now);
-    const bumped = item.createdAt && item.publishedAt
+    const properties = item.properties || [];
+    const autoRenewal = item.autoRenewal
+        || (properties.includes('HH_AUTO_RENEWAL')
+            ? { intervalMinutes: null, nextAt: null }
+            : null);
+    const bumped = !autoRenewal && item.createdAt && item.publishedAt
         ? item.publishedAt.getTime() - item.createdAt.getTime() > 20 * 3_600_000
         : false;
 
@@ -77,17 +78,20 @@ export function computeSignals(item, now = new Date()) {
     const perHour = item.total != null && ageDays != null && ageDays > 0 && ageDays < 1
         ? item.total / (ageDays * 24)
         : null;
-    const properties = item.properties || [];
     const ai = inferAi(item);
     const totalAlt = item.totalAlt ?? null;
     const countersUnstable = totalAlt != null
         && item.total != null
         && Math.abs(item.total - totalAlt) > 20;
+    const listingEndsAt = item.listingEndsAt instanceof Date ? item.listingEndsAt : null;
+    const listingDaysLeft = daysBetween(now, listingEndsAt);
+    const onlineViewers = Number.isFinite(item.onlineViewers) ? item.onlineViewers : null;
 
     return {
         ...item,
         ageDays,
         publishedDays,
+        autoRenewal,
         bumped,
         perDay,
         perHour,
@@ -101,7 +105,10 @@ export function computeSignals(item, now = new Date()) {
         tariff: pickTariff(properties, item.tariffLabel),
         boosted: properties.some((type) => BOOST_PROPERTIES.has(type)),
         ai,
-        hasAi: ai.nra || ai.survey || ai.assistant,
+        hasAi: ai.nra || ai.survey || ai.assistant || ai.callSummary || ai.invite,
+        listingEndsAt,
+        listingDaysLeft,
+        onlineViewers,
         countersUnstable,
     };
 }

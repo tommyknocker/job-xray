@@ -160,18 +160,92 @@ export function parseIso(value) {
     return null;
 }
 
-export function collectPropertyTypes(node, acc = []) {
+const HH_TARIFF_TYPES = new Set([
+    'HH_PREMIUM',
+    'HH_VP_OPTIMUM',
+    'HH_STANDARD_PLUS',
+    'HH_STANDARD',
+]);
+
+function flattenParams(node, acc = {}) {
+    if (node == null) {
+        return acc;
+    }
     if (Array.isArray(node)) {
-        node.forEach((item) => collectPropertyTypes(item, acc));
+        node.forEach((item) => flattenParams(item, acc));
+        return acc;
+    }
+    if (typeof node === 'object') {
+        if (typeof node.key === 'string' && 'value' in node) {
+            acc[node.key] = node.value;
+            return acc;
+        }
+        Object.values(node).forEach((item) => flattenParams(item, acc));
+    }
+    return acc;
+}
+
+export function collectProperties(node, acc = []) {
+    if (Array.isArray(node)) {
+        node.forEach((item) => collectProperties(item, acc));
         return acc;
     }
     if (node && typeof node === 'object') {
         if (typeof node.propertyType === 'string') {
-            acc.push(node.propertyType);
+            acc.push({
+                type: node.propertyType,
+                start: parseIso(node.startTimeIso),
+                end: parseIso(node.endTimeIso),
+                params: flattenParams(node.parameters),
+            });
+            return acc;
         }
-        Object.values(node).forEach((item) => collectPropertyTypes(item, acc));
+        Object.values(node).forEach((item) => collectProperties(item, acc));
     }
     return acc;
+}
+
+export function collectPropertyTypes(node, acc = []) {
+    for (const item of collectProperties(node)) {
+        acc.push(item.type);
+    }
+    return acc;
+}
+
+function autoRenewalFromProperties(props) {
+    const match = props.find((item) => item.type === 'HH_AUTO_RENEWAL');
+    if (!match) {
+        return null;
+    }
+    return {
+        intervalMinutes: toInt(match.params?.intervalMinutes),
+        nextAt: parseIso(match.params?.nextActivationTimeIso),
+    };
+}
+
+function listingEndsAtFrom(props, fallbackIso) {
+    const fallback = parseIso(fallbackIso);
+    if (fallback) {
+        return fallback;
+    }
+    const tariff = props.find((item) => HH_TARIFF_TYPES.has(item.type) && item.end);
+    if (tariff) {
+        return tariff.end;
+    }
+    const hh = props.find((item) => item.type.startsWith('HH_') && item.end);
+    return hh?.end ?? null;
+}
+
+function onlineViewersFromCounters(counters, id) {
+    const row = counters?.[id];
+    if (!row || typeof row !== 'object') {
+        return null;
+    }
+    const excluding = toInt(row.excludingCurrent);
+    if (excluding != null) {
+        return excluding;
+    }
+    return toInt(row.includingCurrent);
 }
 
 function boolish(value) {
@@ -179,7 +253,8 @@ function boolish(value) {
 }
 
 export function normalizeSearchVacancy(raw) {
-    const properties = collectPropertyTypes(raw.vacancyProperties);
+    const collected = collectProperties(raw.vacancyProperties);
+    const properties = collected.map((item) => item.type);
     const auto = raw.autoResponse;
     const { total, totalAlt } = normalizeResponseTotals(
         raw.vacancyResponsesCount,
@@ -195,6 +270,9 @@ export function normalizeSearchVacancy(raw) {
         createdAt: parseIso(raw.creationTime),
         publishedAt: parseIso(raw.publicationTime),
         properties,
+        listingEndsAt: listingEndsAtFrom(collected),
+        autoRenewal: autoRenewalFromProperties(collected),
+        onlineViewers: toInt(raw.online_users_count),
         hasTest: boolish(raw.userTestPresent),
         letterRequired: boolish(raw['@responseLetterRequired']),
         autoResponse: boolish(auto?.acceptAutoResponse),
@@ -265,12 +343,15 @@ export function extractVacancyPage(state) {
     const extra = full.extraVacancyFields || {};
     const status = state.applicantVacancyResponseStatuses?.[id] || {};
     const shortVacancy = status.shortVacancy || {};
-    const properties = collectPropertyTypes(vacancy.vacancyProperties);
+    const collected = collectProperties(vacancy.vacancyProperties);
+    const shortCollected = collectProperties(shortVacancy.vacancyProperties);
+    const properties = (collected.length ? collected : shortCollected).map((item) => item.type);
     const calc = vacancy.vacancyProperties?.calculatedStates?.HH || {};
     const { total, totalAlt } = normalizeResponseTotals(
         extra.vacancyResponsesCount,
         extra.totalResponsesCount,
     );
+    const propsForMeta = collected.length ? collected : shortCollected;
 
     return {
         id,
@@ -281,6 +362,9 @@ export function extractVacancyPage(state) {
         createdAt: parseIso(shortVacancy.creationTime),
         publishedAt: parseIso(vacancy.publicationTimeIso),
         properties,
+        listingEndsAt: listingEndsAtFrom(propsForMeta, vacancy.validToTimeIso),
+        autoRenewal: autoRenewalFromProperties(propsForMeta),
+        onlineViewers: onlineViewersFromCounters(state.vacancyOnlineUsersCounters, id),
         tariffLabel: calc.translation || null,
         hasTest: boolish(status.test?.hasTests) || boolish(shortVacancy.userTestPresent),
         letterRequired: boolish(shortVacancy['@responseLetterRequired']),
@@ -289,6 +373,8 @@ export function extractVacancyPage(state) {
             nra: boolish(state.hasNraProperty),
             survey: boolish(state.hasNeuroSurveyProperty),
             assistant: boolish(state.hasAiAssistantProperty),
+            callSummary: boolish(state.hasCallSummaryProperty),
+            invite: boolish(state.hasNeuroInviteProperty),
         },
         source: 'vacancy',
     };

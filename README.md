@@ -68,6 +68,6 @@ Before you push (or automatically via `git push` after `npm ci`), run **`npm run
 
 ## GitHub releases
 
-Tag `v0.1.6` (must match `package.json` version) and push. CI builds the packages and attaches them to the GitHub Release under the stable names above.
+Tag `v0.1.7` (must match `package.json` version) and push. CI builds the packages and attaches them to the GitHub Release under the stable names above.
 
 After tagging, add the same release notes to [job-xray-site](https://github.com/tommyknocker/job-xray-site) (`data/changelog.php`, `config/site.php`). See [CHANGELOG.md](CHANGELOG.md).

@@ -6,6 +6,19 @@ Version numbers match `package.json`, extension manifests, and Git tags (`v*`). 
 
 ## [Unreleased]
 
+## [0.1.7] - 2026-10-20
+
+### Added
+
+- Per-chip hover tooltips (dates, viewers, auto-renewal, AI types) instead of one native `title` on the whole badge.
+- Viewers chip (eye + count) from `online_users_count` on SERP and `vacancyOnlineUsersCounters.excludingCurrent` on the vacancy page. Search cards skip it when hh already shows «Сейчас смотрят».
+- Listing end date (`до ДД.ММ`) from `validToTimeIso` / tariff `endTimeIso`.
+- Split AI chips: разбор, опрос, ассистент, звонок, инвайт.
+
+### Changed
+
+- «автоподъём» from `HH_AUTO_RENEWAL` (interval + next date in tooltip). Manual bump still shows «подняли» when publication is newer than creation and there is no auto-renewal.
+
 ## [0.1.6] - 2026-10-19
 
 ### Added
@@ -81,6 +94,7 @@ Version numbers match `package.json`, extension manifests, and Git tags (`v*`). 
 - Chromium and Firefox release packages via GitHub Actions (`job-xray-chromium.zip`, `job-xray-firefox.xpi`).
 - Local-only processing: reads `#HH-Lux-InitialState` on open hh.ru pages; no backend or telemetry.
 
+[0.1.7]: https://github.com/tommyknocker/job-xray/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/tommyknocker/job-xray/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/tommyknocker/job-xray/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/tommyknocker/job-xray/compare/v0.1.3...v0.1.4

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "job-xray",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Surfaces hidden hh.ru vacancy response counters (total, unread, per day, real age). UI labels are Russian on the site.",
   "icons": {
     "16": "icons/icon16.png",
