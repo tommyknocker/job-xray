@@ -120,14 +120,22 @@ export function normalizeResponseTotals(vacancyResponsesCount, totalResponsesCou
     };
 }
 
+function rawStateFromElement(el) {
+    const candidates = [
+        el.content?.textContent,
+        el.textContent,
+        el.innerHTML,
+    ];
+    return candidates.find((value) => typeof value === 'string' && value.trim()) || '';
+}
+
 export function readInitialStateFromDocument(doc = document) {
     const el = doc.getElementById(STATE_ID);
     if (!el) {
         return null;
     }
 
-    const raw = el.textContent || '';
-    return parseJsonPayload(raw);
+    return parseJsonPayload(rawStateFromElement(el));
 }
 
 function toInt(value) {

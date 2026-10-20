@@ -13,6 +13,7 @@ import {
     extractVacancyPage,
     normalizeResponseTotals,
     normalizeSearchVacancy,
+    readInitialStateFromDocument,
     vacancyIdFromPath,
 } from '../extension/src/parser.js';
 import {
@@ -137,6 +138,50 @@ function runFixtureTests() {
     const freshRateChips = chipsFor(freshSignals, 'vacancy').map((chip) => chip.text);
     assert.ok(freshRateChips.some((text) => text.includes('/час')));
     assert.ok(!freshRateChips.some((text) => text.includes('/день')));
+    assert.ok(freshRateChips.some((text) => text.includes('откл.')), 'vacancy panel shows responses');
+
+    const templateLikeDoc = {
+        getElementById: () => ({
+            textContent: '',
+            innerHTML: '',
+            content: { textContent: JSON.stringify({ marker: 'template-content' }) },
+        }),
+    };
+    assert.deepEqual(readInitialStateFromDocument(templateLikeDoc), { marker: 'template-content' });
+
+    const innerHtmlOnlyDoc = {
+        getElementById: () => ({
+            textContent: '',
+            innerHTML: '{"marker":"inner-html"}',
+        }),
+    };
+    assert.deepEqual(readInitialStateFromDocument(innerHtmlOnlyDoc), { marker: 'inner-html' });
+
+    const emptyTemplateDoc = {
+        getElementById: () => ({
+            textContent: '',
+            innerHTML: '',
+            content: { textContent: '' },
+        }),
+    };
+    assert.equal(readInitialStateFromDocument(emptyTemplateDoc), null);
+
+    const htmlFixture = readFileSync(join(root, 'tests/fixtures/vacancy-138579321.html'), 'utf8');
+    const fromFile = extractInitialStateFromHtml(htmlFixture);
+    const templateBody = htmlFixture.match(
+        /<template[^>]*id="HH-Lux-InitialState"[^>]*>([\s\S]*?)<\/template>/i,
+    )?.[1];
+    assert.ok(templateBody);
+    const liveTemplateDoc = {
+        getElementById: () => ({
+            textContent: '',
+            innerHTML: templateBody,
+            content: { textContent: '' },
+        }),
+    };
+    const fromLiveTemplate = readInitialStateFromDocument(liveTemplateDoc);
+    assert.ok(fromLiveTemplate);
+    assert.equal(extractVacancyPage(fromLiveTemplate)?.total, extractVacancyPage(fromFile)?.total);
 
     const relatedShard = JSON.parse(
         readFileSync(join(root, 'tests/fixtures/related-vacancies.json'), 'utf8'),

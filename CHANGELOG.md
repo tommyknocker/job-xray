@@ -22,6 +22,7 @@ Version numbers match `package.json`, extension manifests, and Git tags (`v*`). 
 ### Fixed
 
 - Firefox / AMO: chip icons are built with `createElementNS` instead of `innerHTML` (addons-linter “dynamic unsanitized innerHTML”).
+- Vacancy/search badges vanished: live `<template id="HH-Lux-InitialState">` keeps JSON in `.content`, not `element.textContent`. Read `.content.textContent` / `innerHTML` again; tests mock that template contract.
 
 ## [0.1.6] - 2026-10-19
 
