@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { readFirefoxContentBundle } from './lib/firefox-bundle.mjs';
+import { buildCheckedContentBundle } from './check-content-bundle.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const distRoot = join(root, 'dist');
@@ -71,14 +71,7 @@ function zipDir(outDir, zipPath) {
     execFileSync('zip', ['-X', '-r', '-q', zipPath, '.'], { cwd: outDir });
 }
 
-const bundle = await readFirefoxContentBundle(pkg.version);
-
-if (/\bimport\s/.test(bundle)) {
-    throw new Error('Bundled content.js still contains import statements');
-}
-
-const { validateFirefoxBundle } = await import('./check-firefox-bundle.mjs');
-await validateFirefoxBundle();
+const bundle = await buildCheckedContentBundle();
 
 await rm(distRoot, { recursive: true, force: true });
 await mkdir(distRoot, { recursive: true });

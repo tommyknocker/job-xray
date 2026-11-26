@@ -1,135 +1,75 @@
-import vm from 'node:vm';
-import { readFirefoxContentBundle } from './lib/firefox-bundle.mjs';
-import { readFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import assert from 'node:assert/strict';
+import { parseHTML } from 'linkedom';
 
-const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const VACANCY_ID = '101';
 
-function makeDomStubs() {
-    const el = {
-        addEventListener() {},
-        removeEventListener() {},
-        remove() {},
-        querySelector: () => null,
-        querySelectorAll: () => [],
-        closest: () => null,
-        contains: () => false,
-        appendChild() {},
-        insertAdjacentElement() {},
-        getAttribute: () => null,
-        setAttribute() {},
-        classList: { add() {}, remove() {} },
-        parentElement: null,
-        nextElementSibling: null,
-        previousElementSibling: null,
-        children: [],
-        childNodes: [],
-    };
-    el.parentElement = el;
-
-    const document = {
-        documentElement: el,
-        body: el,
-        head: el,
-        querySelector: () => null,
-        querySelectorAll: () => [],
-        getElementById: () => null,
-        contains: () => true,
-        createElement: () => ({ ...el, style: { setProperty() {} }, attachShadow: () => ({ appendChild() {} }) }),
-        addEventListener() {},
-    };
-
-    return document;
+function vacancyList(total) {
+    return { vacancies: [{ vacancyId: VACANCY_ID, vacancyResponsesCount: total }] };
 }
 
-/**
- * Runs the same concatenated content.js as Chromium/Firefox releases.
- * Catches missing modules (ReferenceError on startup) before shipping a zip.
- */
-export async function smokeContentBundle() {
-    const pkg = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'));
-    const bundle = await readFirefoxContentBundle(pkg.version);
-    const document = makeDomStubs();
-    const location = {
-        pathname: '/search/vacancy',
-        href: 'https://nn.hh.ru/search/vacancy',
-        search: '',
-        origin: 'https://nn.hh.ru',
-    };
-
+function startContentScript(script, pathname, state, markup) {
+    const { document, window } = parseHTML(`
+        <html><body>
+            <template id="HH-Lux-InitialState">${JSON.stringify(state)}</template>
+            ${markup}
+        </body></html>
+    `);
+    const events = new window.EventTarget();
+    const timers = [];
+    let scan;
     const context = {
-        console,
-        addEventListener() {},
-        removeEventListener() {},
-        setTimeout,
-        clearTimeout,
-        setInterval: () => 0,
-        clearInterval() {},
-        requestIdleCallback: (fn) => setTimeout(() => fn({ didTimeout: false, timeRemaining: () => 50 }), 0),
-        cancelIdleCallback: clearTimeout,
-        requestAnimationFrame: (fn) => setTimeout(fn, 0),
-        cancelAnimationFrame: clearTimeout,
-        MutationObserver: class MutationObserver {
-            observe() {}
-
-            disconnect() {}
-
-            takeRecords() {
-                return [];
-            }
-        },
-        history: { pushState() {}, replaceState() {} },
-        localStorage: { getItem: () => null, setItem() {}, removeItem() {} },
-        CustomEvent: class CustomEvent {
-            constructor(type, init) {
-                this.type = type;
-                this.detail = init?.detail;
-            }
-        },
         document,
-        location,
-        navigator: { sendBeacon: () => true },
-        fetch: async () => ({ ok: false, text: async () => '', json: async () => ({}) }),
-        chrome: { runtime: { getURL: (path) => path } },
-        Element: class Element {},
-        Node: { DOCUMENT_POSITION_FOLLOWING: 4 },
+        location: new URL(pathname, 'https://hh.ru'),
+        history: { pushState() {}, replaceState() {} },
+        MutationObserver: class { observe() {} },
+        Element: window.Element,
         URL,
         URLSearchParams,
+        addEventListener: events.addEventListener.bind(events),
+        setTimeout: (callback) => timers.push(callback),
+        setInterval: (callback) => { scan = callback; },
     };
     context.window = context;
-    context.self = context;
-    context.globalThis = context;
+    script.runInNewContext(context, { timeout: 5000 });
 
-    try {
-        vm.runInNewContext(bundle, context, { timeout: 5000 });
-    } catch (error) {
-        throw new Error(`content bundle smoke (startup): ${error.message}`);
-    }
-
-    const required = [
-        'detectPage',
-        'applyNegotiationBadges',
-        'mountOnVacancyPage',
-        'mountOnSearchCard',
-        'scan',
-    ];
-    const missing = required.filter((name) => typeof context[name] !== 'function');
-    if (missing.length > 0) {
-        throw new Error(`content bundle smoke: missing globals ${missing.join(', ')}`);
-    }
-
-    if (context.detectPage('/search/vacancy') !== 'search') {
-        throw new Error('content bundle smoke: detectPage broken');
-    }
-    if (context.detectPage('/applicant/negotiations') !== 'negotiations') {
-        throw new Error('content bundle smoke: detectPage negotiations broken');
-    }
+    return {
+        document,
+        scan,
+        dispatch(name, detail) {
+            events.dispatchEvent(new window.CustomEvent(name, { detail }));
+            timers.splice(0).forEach((callback) => callback());
+        },
+    };
 }
 
-const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
+export function smokeContentBundle(script) {
+    const search = startContentScript(
+        script,
+        '/search/vacancy',
+        { vacancySearchResult: vacancyList(18) },
+        `<article data-qa="vacancy-serp__vacancy">
+            <h2><a data-qa="serp-item__title" href="/vacancy/${VACANCY_ID}">Developer</a></h2>
+        </article>`,
+    );
+    const badge = search.document.querySelector(`[data-job-xray="${VACANCY_ID}"]`);
+    assert.match(badge?.shadowRoot.querySelector('.row').textContent ?? '', /18 откл\./);
 
-if (isMain) {
-    await smokeContentBundle();
-    console.log('ok: content bundle smoke');
+    search.dispatch('job-xray-search', { vacancySearchResult: vacancyList(41) });
+    assert.match(badge.shadowRoot.querySelector('.row').textContent, /41 откл\./);
+    assert.equal(search.document.querySelectorAll('[data-job-xray]').length, 1);
+
+    search.document.querySelector('a').setAttribute('href', '/vacancy/202');
+    search.scan();
+    assert.equal(search.document.querySelector('[data-job-xray]'), null);
+
+    const negotiations = startContentScript(
+        script,
+        '/applicant/negotiations',
+        { suitableVacancies: vacancyList(23) },
+        `<div data-qa="negotiations-item">
+            <a data-qa="negotiations-item-vacancy" href="/vacancy/${VACANCY_ID}">Developer</a>
+        </div>`,
+    );
+    const negotiationBadge = negotiations.document.querySelector(`[data-job-xray="${VACANCY_ID}"]`);
+    assert.match(negotiationBadge?.shadowRoot.querySelector('.row').textContent ?? '', /23 откл\./);
 }

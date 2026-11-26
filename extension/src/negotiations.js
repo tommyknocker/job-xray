@@ -45,15 +45,8 @@ export function applyNegotiationBadges(state) {
     const byId = searchSignalsById(state ?? {});
 
     document.querySelectorAll(NEGOTIATION_ITEM_SELECTOR).forEach((item) => {
-        const id = vacancyIdFromNegotiationItem(item);
-        if (!id) {
-            return;
-        }
-        const signals = byId.get(id);
-        if (signals == null || signals.total == null) {
-            return;
-        }
-        mountOnNegotiationItem(item, signals);
+        const signals = byId.get(vacancyIdFromNegotiationItem(item));
+        mountOnNegotiationItem(item, signals?.total != null ? signals : null);
     });
 }
 

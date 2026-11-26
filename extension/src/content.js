@@ -36,53 +36,16 @@ import {
 const SCAN_INTERVAL_MS = 2000;
 
 let lastHref = '';
-let lastSignature = '';
 let lastSerpDomSignature = '';
 let lastEmployerSerpPage = null;
 let scanTimer = 0;
 let hookedHistory = false;
 
-function stateSignature(state) {
-    if (!state) {
-        return 'empty';
-    }
-    const search = state.vacancySearchResult?.vacancies
-        ? state.vacancySearchResult
-        : state.recommendedVacancies;
-    if (search?.vacancies) {
-        const first = search.vacancies[0]?.vacancyId ?? '';
-        const kind = state.vacancySearchResult?.vacancies ? 'search' : 'home';
-        return `${kind}:${search.totalResults ?? search.resultsFound ?? ''}:${search.vacancies.length}:${first}`;
-    }
-    if (state.employerChameleonVacancies?.vacancies) {
-        const list = state.employerChameleonVacancies.vacancies;
-        const first = list[0]?.vacancyId ?? '';
-        return `employer-chameleon:${list.length}:${first}`;
-    }
-    const vacancyId = state.analyticsParams?.vacancyId
-        ?? state.vacancyView?.vacancyFull?.vacancy?.vacancyId
-        ?? '';
-    if (state.suitableVacancies?.vacancies) {
-        const list = state.suitableVacancies.vacancies;
-        const first = list[0]?.vacancyId ?? '';
-        return `negotiations:${list.length}:${first}`;
-    }
-    return `vacancy:${vacancyId}`;
-}
-
 function applySearchBadges(state) {
     const byId = searchSignalsById(state);
 
     document.querySelectorAll(SERP_CARD_SELECTOR).forEach((article) => {
-        const id = vacancyIdFromCard(article);
-        if (!id) {
-            return;
-        }
-        const signals = byId.get(id);
-        if (!signals) {
-            return;
-        }
-        mountOnSearchCard(article, signals);
+        mountOnSearchCard(article, byId.get(vacancyIdFromCard(article)));
     });
 }
 
@@ -94,7 +57,7 @@ function mountVacancy(state) {
     mountOnVacancyPage(computeSignals(item));
 }
 
-function scan(force = false) {
+function scan() {
     const page = detectPage(location.pathname);
     if (!page) {
         return;
@@ -114,10 +77,6 @@ function scan(force = false) {
     }
 
     const state = readInitialStateFromDocument();
-    const signature = stateSignature(state);
-    if (force || hrefChanged || signature !== lastSignature) {
-        lastSignature = signature;
-    }
 
     if (page === 'search' || page === 'home' || page === 'employer' || page === 'negotiations') {
         if (page === 'search') {
@@ -249,5 +208,5 @@ registerSearchShardListener(() => {
 });
 
 hookHistory();
-scan(true);
+scan();
 observe();

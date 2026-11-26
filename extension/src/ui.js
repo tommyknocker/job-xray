@@ -324,10 +324,22 @@ export function chipsFor(signals, variant, options = {}) {
     return chips;
 }
 
-export function createBadge(signals, variant = 'search', options = {}) {
+const renderedChipsByBadge = new WeakMap();
+
+function updateBadge(badge, signals, variant, options) {
+    const chips = chipsFor(signals, variant, options);
+    const renderedChips = JSON.stringify(chips);
+    if (badge.getAttribute('data-job-xray') !== signals.id) {
+        badge.setAttribute('data-job-xray', signals.id);
+    }
+    if (renderedChipsByBadge.get(badge) !== renderedChips) {
+        badge.shadowRoot.querySelector('.row').replaceChildren(...chips.map(chip));
+        renderedChipsByBadge.set(badge, renderedChips);
+    }
+}
+
+function createBadge(signals, variant, options) {
     const host = document.createElement('div');
-    host.dataset.jobXray = signals.id;
-    host.setAttribute('data-job-xray', signals.id);
     host.setAttribute('data-job-xray-surface', variant);
     host.style.setProperty('display', 'block', 'important');
     host.style.setProperty('width', '100%', 'important');
@@ -364,12 +376,10 @@ export function createBadge(signals, variant = 'search', options = {}) {
 
     const row = document.createElement('div');
     row.className = 'row';
-    chipsFor(signals, variant, options).forEach((item) => {
-        row.appendChild(chip(item));
-    });
     wrap.appendChild(row);
     shadow.appendChild(wrap);
 
+    updateBadge(host, signals, variant, options);
     return host;
 }
 
@@ -410,8 +420,9 @@ function findViewersNode(root, pattern) {
 function searchCardMountPoint(article) {
     const title = article.querySelector('[data-qa="serp-item__title"]');
     if (title) {
-        const afterTitle = title.closest('h2, h3, h4') || title.parentElement || title;
-        return { mode: 'after', ref: afterTitle };
+        const heading = title.closest('h2, h3, h4') || title.parentElement;
+        const ref = heading !== article && article.contains(heading) ? heading : title;
+        return { mode: 'after', ref };
     }
 
     const cardInner = [...article.querySelectorAll('[id]')].find((node) => /^\d+$/.test(node.id));
@@ -455,13 +466,21 @@ export function cardShowsHhViewers(root) {
 }
 
 export function mountOnSearchCard(article, signals) {
-    if (article.querySelector('[data-job-xray]')) {
+    const existing = article.querySelector('[data-job-xray-surface="search"]');
+    if (!signals) {
+        if (existing && existing.getAttribute('data-job-xray') !== vacancyIdFromCard(article)) {
+            existing.remove();
+        }
         return;
     }
 
-    const badge = createBadge(signals, 'search', {
-        hideOnlineViewers: cardShowsHhViewers(article),
-    });
+    const options = { hideOnlineViewers: signals.onlineViewers > 0 && cardShowsHhViewers(article) };
+    if (existing) {
+        updateBadge(existing, signals, 'search', options);
+        return;
+    }
+
+    const badge = createBadge(signals, 'search', options);
     const point = searchCardMountPoint(article);
     if (point.mode === 'after' && point.ref) {
         point.ref.insertAdjacentElement('afterend', badge);
@@ -498,7 +517,18 @@ function negotiationItemMountPoint(item) {
 }
 
 export function mountOnNegotiationItem(item, signals) {
-    if (!item || item.querySelector('[data-job-xray]')) {
+    if (!item) {
+        return;
+    }
+    const existing = item.querySelector('[data-job-xray-surface="search"]');
+    if (!signals) {
+        if (existing && existing.getAttribute('data-job-xray') !== vacancyIdFromNegotiationItem(item)) {
+            existing.remove();
+        }
+        return;
+    }
+    if (existing) {
+        updateBadge(existing, signals, 'search');
         return;
     }
 
@@ -910,18 +940,17 @@ export function mountOnVacancyPage(signals, doc = document) {
         return;
     }
 
+    const options = { hideOnlineViewers: signals.onlineViewers > 0 && cardShowsHhViewers(doc.body || doc) };
     const existing = doc.querySelector('[data-job-xray-surface="vacancy"]');
     if (existing) {
-        const sameVacancy = existing.getAttribute('data-job-xray') === signals.id && doc.contains(existing);
-        if (sameVacancy && !vacancyBadgeMisplaced(existing, point, doc)) {
-            return;
+        updateBadge(existing, signals, 'vacancy', options);
+        if (vacancyBadgeMisplaced(existing, point, doc)) {
+            insertVacancyBadge(existing, point);
         }
-        existing.remove();
+        return;
     }
 
-    const badge = createBadge(signals, 'vacancy', {
-        hideOnlineViewers: cardShowsHhViewers(doc.body || doc),
-    });
+    const badge = createBadge(signals, 'vacancy', options);
     insertVacancyBadge(badge, point);
 }
 

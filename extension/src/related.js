@@ -57,6 +57,9 @@ function isInRelatedBlock(node) {
 
 function articleForVacancyId(id) {
     for (const link of document.querySelectorAll(`a[href*="/vacancy/${id}"]`)) {
+        if (vacancyIdFromPath(link.getAttribute('href')) !== id) {
+            continue;
+        }
         const article = closestSerpCard(link)
             || link.closest('article')
             || link.closest('[class*="vacancy"]');
@@ -65,10 +68,6 @@ function articleForVacancyId(id) {
         }
     }
     return null;
-}
-
-function hasSearchBadge(id) {
-    return Boolean(document.querySelector(`[data-job-xray="${id}"][data-job-xray-surface="search"]`));
 }
 
 export function ingestRelatedVacanciesPayload(payload) {
@@ -142,34 +141,31 @@ export function mountRelatedVacancyCards(excludeVacancyId = '') {
         return;
     }
 
-    for (const [id, signals] of relatedById) {
-        if (excludeVacancyId && id === excludeVacancyId) {
-            continue;
-        }
-        if (hasSearchBadge(id)) {
-            continue;
-        }
-
-        const article = articleForVacancyId(id);
-        if (!article || article.querySelector('[data-job-xray]')) {
-            continue;
-        }
-        mountOnSearchCard(article, signals);
-    }
-
+    const mountedIds = new Set();
     document.querySelectorAll(SERP_CARD_SELECTOR).forEach((article) => {
         if (!isInRelatedBlock(article)) {
             return;
         }
         const id = vacancyIdFromCard(article);
-        if (!id || id === excludeVacancyId || article.querySelector('[data-job-xray]')) {
+        if (!id || id === excludeVacancyId) {
             return;
         }
         const signals = relatedById.get(id);
+        mountOnSearchCard(article, signals);
         if (signals) {
-            mountOnSearchCard(article, signals);
+            mountedIds.add(id);
         }
     });
+
+    for (const [id, signals] of relatedById) {
+        if (id === excludeVacancyId || mountedIds.has(id)) {
+            continue;
+        }
+        const article = articleForVacancyId(id);
+        if (article) {
+            mountOnSearchCard(article, signals);
+        }
+    }
 }
 
 function scheduleRelatedMount(callback) {

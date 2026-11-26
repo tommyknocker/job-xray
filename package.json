@@ -5,14 +5,14 @@
   "type": "module",
   "description": "Surfaces hidden hh.ru vacancy response counters (total, unread, per day, real age).",
   "scripts": {
-    "check": "node scripts/check-firefox-bundle.mjs",
+    "check": "node scripts/check-content-bundle.mjs",
     "test": "node tests/run.mjs && npm run check",
     "validate": "node scripts/validate.mjs",
     "build": "node scripts/build.mjs",
     "prepare": "node scripts/install-git-hooks.mjs"
   },
   "devDependencies": {
-    "acorn": "^8.15.0",
+    "esbuild": "^0.28.2",
     "linkedom": "^0.18.12"
   },
   "engines": {

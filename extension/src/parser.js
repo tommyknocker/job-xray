@@ -424,11 +424,8 @@ export function detectPage(pathname) {
 export function extractVacancy(state, pathname = '') {
     const fromPage = extractVacancyPage(state);
     const urlId = vacancyIdFromPath(pathname);
-    if (fromPage && (!urlId || fromPage.id === urlId)) {
+    if (!urlId || fromPage?.id === urlId) {
         return fromPage;
     }
-    if (!urlId) {
-        return fromPage;
-    }
-    return extractSearchVacancies(state).find((item) => item.id === urlId) || fromPage;
+    return extractSearchVacancies(state).find((item) => item.id === urlId) ?? null;
 }

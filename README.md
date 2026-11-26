@@ -41,6 +41,7 @@ Firefox cannot load ES modules as `content_scripts`, so the release package is a
 ## Install a built package
 
 ```bash
+npm ci
 npm run build
 ```
 
@@ -50,21 +51,19 @@ Output lives in `dist/`:
 - archives: versioned names plus stable aliases (`job-xray-chromium.zip`, `job-xray-firefox.xpi`)
 - `dist/SHA256SUMS`
 
-Load unpacked from `dist/<engine>/`, or install the zip/xpi.
+For Chromium, load `dist/chromium/` as an unpacked extension. Local Firefox packages are unsigned and can be loaded temporarily.
 
 Firefox: `about:debugging` → **This Firefox** → **Load Temporary Add-on** → `dist/firefox/manifest.json`.
 
-## Tests and Firefox bundle check
-
-Parser tests need a local `data/` folder with saved HTML snapshots (not in git).
+## Tests and bundle check
 
 ```bash
 npm test
 ```
 
-`npm test` also runs `npm run check`: it builds the **same** concatenated `content.js` as Chrome/Firefox releases (import graph from `content.js`, not a hand-maintained list), runs a short **startup smoke** in Node, and fails on duplicate top-level names or syntax errors. `npm run build` runs the same check before writing `dist/`.
+`npm run check` uses esbuild to generate the classic `content.js` shared by Chromium and Firefox. It checks the network hooks and runs the release script against test pages to verify that badges render and update. `npm test` runs this check after the fixture tests. `npm run build` checks the bundle before packaging it.
 
-Before you push (or automatically via `git push` after `npm ci`), run **`npm run validate`**: `npm ci` deps present, fixture tests, Firefox bundle check, and release build — same as GitHub Actions. Full HTML regression tests need a local gitignored `data/` folder; CI skips them when `data/` is absent.
+Run `npm run validate` for the same fixture tests and checked release build as GitHub Actions. The Git hook runs it before pushing. Additional integration tests run with `npm test` when the gitignored `data/` directory contains the original HTML snapshots.
 
 ## GitHub releases
 
