@@ -6,6 +6,20 @@ Version numbers match `package.json`, extension manifests, and Git tags (`v*`). 
 
 ## [Unreleased]
 
+## [0.1.10] - 2026-11-26
+
+### Fixed
+
+- SERP, negotiation, and related-vacancy badges update when response counts change, instead of keeping the first number.
+- Switching vacancy no longer shows the previous vacancy's counters. A stale badge is removed until data for the current vacancy arrives.
+
+### Changed
+
+- Release `content.js` is bundled with esbuild instead of the hand-written import concatenator.
+- `npm run check` runs the built content script against test pages and asserts that badges render and update.
+
+Thanks to [tepsurkaevIsa](https://github.com/tepsurkaevIsa) ([#1](https://github.com/tommyknocker/job-xray/pull/1)).
+
 ## [0.1.9] - 2026-11-18
 
 ### Fixed
